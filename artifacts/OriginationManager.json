@@ -1,0 +1,223 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "OriginationManager",
+  "sourceName": "contracts/OriginationManager.sol",
+  "defaultAddress": "0xBE016815E82206ABeb3a1f60c1729f3Bb4856CE4",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_loanCore",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "parts",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "interest",
+          "type": "uint256"
+        }
+      ],
+      "name": "getFirstInstallmentByAmount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "installment",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "durationSecs",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "principal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "interest",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "collateralTokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "payableCurrency",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "parts",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "partduration",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct PayLaterLoanLibrary.LoanTerms",
+          "name": "loanTerms",
+          "type": "tuple"
+        },
+        {
+          "internalType": "address",
+          "name": "borrowerPrimaryAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "borrowerSecondaryAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "lenderPrimaryAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenType",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "tokenAddress",
+          "type": "address"
+        }
+      ],
+      "name": "initializePayLaterRequest",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "payLaterLoanId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "durationSecs",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "principal",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "collateralTokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "payableCurrency",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "parts",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "partduration",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct RentalLibrary.RentalTerms",
+          "name": "rentalTerms",
+          "type": "tuple"
+        },
+        {
+          "internalType": "address",
+          "name": "borrowerPrimaryAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "borrowerSecondaryAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "lenderPrimaryAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenType",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "tokenAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rentalType",
+          "type": "uint256"
+        }
+      ],
+      "name": "initializeRentalRequest",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "rentalLoanId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "loanCore",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+}

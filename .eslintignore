@@ -1,0 +1,9 @@
+src/lib
+config/secrets.js
+build
+public
+coverage
+tools/node-version-check.js
+tools/setup/setup-message.js
+**/*/*.test.js
+src/**/*.scss

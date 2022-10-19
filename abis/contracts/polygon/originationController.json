@@ -1,0 +1,181 @@
+{
+  "address": "0x3b06ee617C7E870cf00F19eF9C2640E289983cEa",
+  "abi": [
+    {
+      "type": "constructor",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_loanCore"
+        },
+        {
+          "type": "address",
+          "name": "_assetWrapper"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "assetWrapper",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "initializeLoan",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "tuple",
+          "name": "loanTerms",
+          "components": [
+            {
+              "type": "uint256",
+              "name": "durationSecs"
+            },
+            {
+              "type": "uint256",
+              "name": "principal"
+            },
+            {
+              "type": "uint256",
+              "name": "interest"
+            },
+            {
+              "type": "uint256",
+              "name": "collateralTokenId"
+            },
+            {
+              "type": "address",
+              "name": "payableCurrency"
+            }
+          ]
+        },
+        {
+          "type": "address",
+          "name": "borrower"
+        },
+        {
+          "type": "address",
+          "name": "lender"
+        },
+        {
+          "type": "uint8",
+          "name": "v"
+        },
+        {
+          "type": "bytes32",
+          "name": "r"
+        },
+        {
+          "type": "bytes32",
+          "name": "s"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": "loanId"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "initializeLoanWithCollateralPermit",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "tuple",
+          "name": "loanTerms",
+          "components": [
+            {
+              "type": "uint256",
+              "name": "durationSecs"
+            },
+            {
+              "type": "uint256",
+              "name": "principal"
+            },
+            {
+              "type": "uint256",
+              "name": "interest"
+            },
+            {
+              "type": "uint256",
+              "name": "collateralTokenId"
+            },
+            {
+              "type": "address",
+              "name": "payableCurrency"
+            }
+          ]
+        },
+        {
+          "type": "address",
+          "name": "borrower"
+        },
+        {
+          "type": "address",
+          "name": "lender"
+        },
+        {
+          "type": "uint8",
+          "name": "v"
+        },
+        {
+          "type": "bytes32",
+          "name": "r"
+        },
+        {
+          "type": "bytes32",
+          "name": "s"
+        },
+        {
+          "type": "uint8",
+          "name": "collateralV"
+        },
+        {
+          "type": "bytes32",
+          "name": "collateralR"
+        },
+        {
+          "type": "bytes32",
+          "name": "collateralS"
+        },
+        {
+          "type": "uint256",
+          "name": "permitDeadline"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": "loanId"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "loanCore",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    }
+  ]
+}

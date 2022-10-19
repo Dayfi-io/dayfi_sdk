@@ -1,0 +1,49 @@
+{
+  "address": "0xA83AF9001c95C84Fb39b8bCdB1c4cBe374Bc0Fe4",
+  "abi": [
+    {
+      "type": "constructor",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_loanCore"
+        },
+        {
+          "type": "address",
+          "name": "_borrowerNote"
+        },
+        {
+          "type": "address",
+          "name": "_lenderNote"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "claim",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "lenderNoteId"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "repay",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "borrowerNoteId"
+        }
+      ],
+      "outputs": []
+    }
+  ]
+}
