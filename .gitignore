@@ -129,6 +129,5 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-/tester
 yarn.lock
 package-lock.json
