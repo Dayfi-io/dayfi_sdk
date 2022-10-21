@@ -76,7 +76,7 @@ class DayfiSDK {
     dayfiIframeWrapper.style.borderRadius = "16px";
 
     const containerIframe = document.createElement("iframe");
-    containerIframe.src = `http://localhost:3001/bnpl?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
+    containerIframe.src = `https://main.d2qs3oix9e2v7x.amplifyapp.com/bnpl?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
     containerIframe.style.width = "100%";
     containerIframe.style.height = "100%";
     containerIframe.style.borderRadius = "16px";
