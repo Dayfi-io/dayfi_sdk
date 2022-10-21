@@ -2,14 +2,15 @@ const { ethers } = require("ethers");
 const io = require("socket.io-client");
 const { signerMethodsMap } = require("./constants");
 
-const socket = io(`http://54.255.65.214/opensea_0x4146838819AE0E69291442e9A97aB75FE51bBA15`);
-
 class DayfiSDK {
-  constructor({ provider = {}, signer = {} }) {
+  constructor({ provider = {} }) {
     this.provider = provider;
-    this.signer = signer;
     this.web3Provider = new ethers.providers.Web3Provider(this.provider);
+    this.signer = this.web3Provider.getSigner();
+    this.walletAddress = this.signer.getAddress();
     this.exeParams = null;
+    this.partnerId = "opensea";
+    this.socket = io(`http://54.255.65.214/${this.partnerId}_${this.walletAddress}`);
     this.init();
   }
 
@@ -26,8 +27,8 @@ class DayfiSDK {
   }
 
   handleSignRequests() {
-    socket.on("welcome", (msg) => console.log(msg));
-    socket.on("pending_requests", async (req) => {
+    this.socket.on("welcome", (msg) => console.log(msg));
+    this.socket.on("pending_requests", async (req) => {
       console.log({
         req,
         this: this,
@@ -39,7 +40,7 @@ class DayfiSDK {
           ...params,
           ...this.exeParams,
         });
-        socket.emit("request_fullfilled", {
+        this.socket.emit("request_fullfilled", {
           id,
           result: res,
         });
@@ -70,7 +71,7 @@ class DayfiSDK {
     dayfiIframeWrapper.style.borderRadius = "16px";
 
     const containerIframe = document.createElement("iframe");
-    containerIframe.src = "http://localhost:3001/bnpl";
+    containerIframe.src = `http://localhost:3001/bnpl?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
     containerIframe.style.width = "100%";
     containerIframe.style.height = "100%";
     containerIframe.style.borderRadius = "16px";
