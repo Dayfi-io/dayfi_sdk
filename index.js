@@ -2,7 +2,7 @@ const { ethers } = require("ethers");
 const io = require("socket.io-client");
 const { signerMethodsMap } = require("./constants");
 
-const socket = io(`http://localhost:5001/opensea_0x4146838819AE0E69291442e9A97aB75FE51bBA15`);
+const socket = io(`http://54.255.65.214/opensea_0x4146838819AE0E69291442e9A97aB75FE51bBA15`);
 
 class DayfiSDK {
   constructor({ provider = {}, signer = {} }) {
@@ -39,7 +39,7 @@ class DayfiSDK {
           ...params,
           ...this.exeParams,
         });
-        socket.emit("request_fulfilled", {
+        socket.emit("request_fullfilled", {
           id,
           result: res,
         });

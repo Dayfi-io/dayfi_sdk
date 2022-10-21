@@ -9,10 +9,12 @@ export const getApprovalForPayLaterTransfer = async ({ tokenDetails, interest, p
   });
   const signer = provider.getSigner();
   const originationManagerContractInstance = new ethers.Contract(tokenDetails.tokenAddress, ERC721.abi, signer);
-  const result = await originationManagerContractInstance.approve(
+  const response = await originationManagerContractInstance.approve(
     OriginationManager.defaultAddress,
     tokenDetails.tokenId,
   );
 
-  return result;
+  const receipt = await response.wait();
+
+  return receipt;
 };
