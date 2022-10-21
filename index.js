@@ -11,6 +11,10 @@ class DayfiSDK {
     this.exeParams = null;
     this.partnerId = "opensea";
     this.socket = io(`http://54.255.65.214/${this.partnerId}_${this.walletAddress}`);
+    console.log({
+      this: this,
+      address: `http://54.255.65.214/${this.partnerId}_${this.walletAddress}`,
+    });
     this.init();
   }
 
