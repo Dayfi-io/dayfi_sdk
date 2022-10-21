@@ -7,14 +7,10 @@ class DayfiSDK {
     this.provider = provider;
     this.web3Provider = new ethers.providers.Web3Provider(this.provider);
     this.signer = this.web3Provider.getSigner();
-    this.walletAddress = this.signer.getAddress();
+    this.walletAddress = null;
     this.exeParams = null;
     this.partnerId = "opensea";
-    this.socket = io(`http://54.255.65.214/${this.partnerId}_${this.walletAddress}`);
-    console.log({
-      this: this,
-      address: `http://54.255.65.214/${this.partnerId}_${this.walletAddress}`,
-    });
+    this.socket = null;
     this.init();
   }
 
@@ -30,7 +26,12 @@ class DayfiSDK {
     }
   }
 
-  handleSignRequests() {
+  async handleSignRequests() {
+    this.walletAddress = await this.signer.getAddress();
+    console.log({
+      userAddress: this.walletAddress,
+    });
+    this.socket = io(`http://54.255.65.214/${this.partnerId}_${this.walletAddress}`);
     this.socket.on("welcome", (msg) => console.log(msg));
     this.socket.on("pending_requests", async (req) => {
       console.log({
