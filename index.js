@@ -31,7 +31,7 @@ class DayfiSDK {
     console.log({
       userAddress: this.walletAddress,
     });
-    this.socket = io(`http://54.255.65.214/${this.partnerId}_${this.walletAddress}`);
+    this.socket = io(`http://socket.sandbox.dayfi.io/${this.partnerId}_${this.walletAddress}`);
     this.socket.on("welcome", (msg) => console.log(msg));
     this.socket.on("pending_requests", async (req) => {
       console.log({
