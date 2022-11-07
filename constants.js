@@ -1,5 +1,5 @@
 const { getApprovalForPayLaterTransfer } = require("./helpers/SigningMethods");
 
-export const signerMethodsMap = {
+export const requestMethodsMap = {
   getApprovalForPayLaterTransfer,
 };

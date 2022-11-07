@@ -1,6 +1,6 @@
 const { ethers } = require("ethers");
 const io = require("socket.io-client");
-const { signerMethodsMap } = require("./constants");
+const { requestMethodsMap } = require("./constants");
 
 class DayfiSDK {
   constructor({ provider = {} }) {
@@ -31,17 +31,17 @@ class DayfiSDK {
     console.log({
       userAddress: this.walletAddress,
     });
-    this.socket = io(`http://socket.sandbox.dayfi.io/${this.partnerId}_${this.walletAddress}`);
+    this.socket = io(`https://socket.sandbox.dayfi.io/${this.partnerId}_${this.walletAddress}`);
     this.socket.on("welcome", (msg) => console.log(msg));
     this.socket.on("pending_requests", async (req) => {
       console.log({
         req,
         this: this,
       });
-      const { id, method, params } = req;
+      const { id, method, params = {} } = req;
       try {
-        const signerMethod = signerMethodsMap[method];
-        const res = await signerMethod({
+        const requestHandler = requestMethodsMap[method];
+        const res = await requestHandler({
           ...params,
           ...this.exeParams,
         });
