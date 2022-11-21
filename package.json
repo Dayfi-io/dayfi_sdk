@@ -25,10 +25,8 @@
   "dependencies": {
     "@gnosis.pm/safe-react-gateway-sdk": "^3.4.5",
     "@openzeppelin/contracts": "^4.8.0",
-    "async": "^2.6.4",
     "axios": "^0.27.2",
     "bignumber.js": "^9.1.0",
-    "dotenv": "^16.0.3",
     "ethers": "^5.7.1",
     "immutable": "^4.1.0",
     "semver": "^7.3.8",
