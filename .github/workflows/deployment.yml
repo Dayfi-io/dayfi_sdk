@@ -12,10 +12,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: "npm"
           registry-url: "https://registry.npmjs.org"
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: npm install
       - name: Deploy to NPM registry
-        run: yarn publish
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
