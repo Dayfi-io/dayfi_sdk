@@ -16,6 +16,6 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
       - name: Deploy to NPM registry
-        run: yarn publish --tag alpha
+        run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
