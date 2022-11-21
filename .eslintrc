@@ -44,5 +44,6 @@
       }
     ],
     "vars-on-top": 1
-  }
+  },
+  "ignorePatterns": ["node_modules/", "build/", "dist/", "coverage/"]
 }

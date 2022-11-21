@@ -1,7 +1,6 @@
 const { ethers } = require("ethers");
 const OriginationManager = require("../artifacts/OriginationManager.json");
 const ERC721 = require("../abis/ERC721.json");
-const constants = require("./../constants");
 const Safe = require("../artifacts/Safe.json");
 const SafeProxyFactory = require("../artifacts/SafeProxyFactory.json");
 const { search } = require("../utils");
@@ -32,7 +31,7 @@ const getIsAccountConnected = async ({ web3Provider }) => {
 
 const triggerChainChange = async ({ web3Provider, chain }) => {
   try {
-    const { CHAIN_DETAILS } = constants;
+    const { CHAIN_DETAILS } = require("./../constants");
     const defaultMetamaskChains = [5];
     const isDefaultChain = defaultMetamaskChains.includes(chain);
     if (isDefaultChain) {
@@ -76,7 +75,7 @@ const getApprovalForPayLaterTransfer = async ({ tokenDetails, interest, web3Prov
 
 const createVault = async ({ provider, chainId, accounts, chainDetails, currentUserAddress }) => {
   try {
-    const { SALT, ZERO_ADDRESS, EMPTY_DATA, DEPLOYED_ADDRESS } = constants;
+    const { SALT, ZERO_ADDRESS, EMPTY_DATA, DEPLOYED_ADDRESS } = require("./../constants");
 
     const web3Js = new Web3(provider);
     const SafeContract = new web3Js.eth.Contract(Safe.abi, DEPLOYED_ADDRESS[5].GnosisSafe, provider);
