@@ -9,10 +9,22 @@
   "author": "Engineers@Dayfi",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^8.25.0"
+    "eslint": "^8.25.0",
+    "process": "^0.11.10"
   },
   "dependencies": {
+    "@gnosis.pm/safe-react-gateway-sdk": "^3.4.5",
+    "@openzeppelin/contracts": "^4.8.0",
+    "async": "^2.6.4",
+    "axios": "^0.27.2",
+    "bignumber.js": "^9.1.0",
+    "dotenv": "^16.0.3",
     "ethers": "^5.7.1",
-    "socket.io-client": "^4.5.3"
+    "firebase": "^9.14.0",
+    "immutable": "^4.1.0",
+    "semver": "^7.3.8",
+    "socket.io-client": "^4.5.3",
+    "web3": "^1.8.1",
+    "web3-utils": "^1.8.1"
   }
 }

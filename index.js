@@ -1,6 +1,7 @@
 const { ethers } = require("ethers");
 const io = require("socket.io-client");
 const { requestMethodsMap } = require("./constants");
+const { getChainsConfig } = require("@gnosis.pm/safe-react-gateway-sdk");
 
 class DayfiSDK {
   constructor({ provider = {} }) {
@@ -11,10 +12,11 @@ class DayfiSDK {
     this.exeParams = null;
     this.partnerId = "opensea";
     this.socket = null;
+    this.chainDetails = null;
     this.init();
   }
 
-  init() {
+  async init() {
     if (!document.getElementById("dayfi-container")) {
       const dayfiContainer = document.createElement("div");
       dayfiContainer.id = "dayfi-container";
@@ -23,7 +25,19 @@ class DayfiSDK {
         window.Dayfi = this;
       }
       this.handleSignRequests();
+      this.getChainDetails();
+      this.web3Provider.provider.on("chainChanged", (newNetwork) => {
+        this.socket.emit("request_fullfilled", {
+          id: "chainChanged",
+          chain: parseInt(newNetwork, 16),
+        });
+      });
     }
+  }
+
+  async getChainDetails() {
+    const { results } = await getChainsConfig("https://safe-client.gnosis.io");
+    this.chainDetails = results;
   }
 
   async handleSignRequests() {
@@ -31,7 +45,7 @@ class DayfiSDK {
     console.log({
       userAddress: this.walletAddress,
     });
-    this.socket = io(`https://socket.sandbox.dayfi.io/${this.partnerId}_${this.walletAddress}`);
+    this.socket = io(`http://localhost:9001/${this.partnerId}_${this.walletAddress}`);
     this.socket.on("welcome", (msg) => console.log(msg));
     this.socket.on("pending_requests", async (req) => {
       console.log({
@@ -42,22 +56,22 @@ class DayfiSDK {
       try {
         const requestHandler = requestMethodsMap[method];
         const res = await requestHandler({
+          web3Provider: this.web3Provider,
+          provider: this.provider,
+          firestore: this.firestore,
           ...params,
           ...this.exeParams,
         });
-        this.socket.emit("request_fullfilled", {
-          id,
-          result: res,
-        });
+        if (res) {
+          this.socket.emit("request_fullfilled", {
+            id,
+            result: res,
+          });
+        }
       } catch (error) {
         console.log(error);
       }
     });
-  }
-
-  isWalletConnected() {
-    const accounts = this.web3Provider.listAccounts();
-    return accounts.length > 0;
   }
 
   openBuyNowPayLater(tokenDetails = {}) {
@@ -67,7 +81,7 @@ class DayfiSDK {
     dayfiIframeWrapper.style.position = "fixed";
     dayfiIframeWrapper.style.bottom = "84px";
     dayfiIframeWrapper.style.right = "20px";
-    dayfiIframeWrapper.style.width = "400px";
+    dayfiIframeWrapper.style.width = "700px";
     dayfiIframeWrapper.style.height = "calc(100% - 104px)";
     dayfiIframeWrapper.style.minHeight = "250px";
     dayfiIframeWrapper.style.maxHeight = "704px";
@@ -76,14 +90,17 @@ class DayfiSDK {
     dayfiIframeWrapper.style.borderRadius = "16px";
 
     const containerIframe = document.createElement("iframe");
-    containerIframe.src = `https://main.d2qs3oix9e2v7x.amplifyapp.com/bnpl?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
+    containerIframe.src = `http://localhost:3001/vault?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
     containerIframe.style.width = "100%";
     containerIframe.style.height = "100%";
     containerIframe.style.borderRadius = "16px";
 
     dayfiIframeWrapper.appendChild(containerIframe);
     dayfiContainer.appendChild(dayfiIframeWrapper);
-    this.exeParams = { tokenDetails, provider: this.web3Provider };
+    // this.exeParams = { tokenDetails };
+    this.exeParams = {
+      chainDetails: this.chainDetails,
+    };
   }
 }
 
