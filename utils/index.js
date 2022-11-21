@@ -1,6 +1,6 @@
 const { isAddress, isHexStrict, toChecksumAddress } = require("web3-utils");
 
-export const isValidAddress = (address) => {
+const isValidAddress = (address) => {
   if (address) {
     // `isAddress` do not require the string to start with `0x`
     // `isHexStrict` ensures the address to start with `0x` aside from being a valid hex string
@@ -10,7 +10,7 @@ export const isValidAddress = (address) => {
   return false;
 };
 
-export const checksumAddress = (address) => {
+const checksumAddress = (address) => {
   if (!isValidAddress(address)) {
     return "";
   }
@@ -22,10 +22,16 @@ export const checksumAddress = (address) => {
   }
 };
 
-export function search(nameKey, myArray) {
+function search(nameKey, myArray) {
   for (var i = 0; i < myArray.length; i++) {
     if (myArray[i].chainId === nameKey) {
       return myArray[i];
     }
   }
 }
+
+module.exports = {
+  isValidAddress,
+  checksumAddress,
+  search,
+};

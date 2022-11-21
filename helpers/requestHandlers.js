@@ -8,12 +8,12 @@ const { search } = require("../utils");
 const { EstimateSafeCreationGas, createSendParams } = require("./../utils/gasUtils");
 const Web3 = require("web3");
 
-export const triggerCloseContainer = async () => {
+const triggerCloseContainer = async () => {
   const dayfiContainer = document.getElementById("dayfi-container");
   dayfiContainer.removeChild(dayfiContainer.firstChild);
 };
 
-export const getIsAccountConnected = async ({ web3Provider }) => {
+const getIsAccountConnected = async ({ web3Provider }) => {
   const accounts = await web3Provider.listAccounts();
   if (accounts.length > 0) {
     const network = await web3Provider.getNetwork();
@@ -30,7 +30,7 @@ export const getIsAccountConnected = async ({ web3Provider }) => {
   }
 };
 
-export const triggerChainChange = async ({ web3Provider, chain }) => {
+const triggerChainChange = async ({ web3Provider, chain }) => {
   try {
     const { CHAIN_DETAILS } = constants;
     const defaultMetamaskChains = [5];
@@ -57,7 +57,7 @@ export const triggerChainChange = async ({ web3Provider, chain }) => {
   }
 };
 
-export const getApprovalForPayLaterTransfer = async ({ tokenDetails, interest, web3Provider }) => {
+const getApprovalForPayLaterTransfer = async ({ tokenDetails, interest, web3Provider }) => {
   console.log({
     tokenDetails,
     interest,
@@ -74,7 +74,7 @@ export const getApprovalForPayLaterTransfer = async ({ tokenDetails, interest, w
   return receipt;
 };
 
-export const createVault = async ({ provider, chainId, accounts, chainDetails, currentUserAddress }) => {
+const createVault = async ({ provider, chainId, accounts, chainDetails, currentUserAddress }) => {
   try {
     const { SALT, ZERO_ADDRESS, EMPTY_DATA, DEPLOYED_ADDRESS } = constants;
 
@@ -155,4 +155,12 @@ export const createVault = async ({ provider, chainId, accounts, chainDetails, c
   } catch (err) {
     console.log(err);
   }
+};
+
+module.exports = {
+  triggerCloseContainer,
+  getIsAccountConnected,
+  triggerChainChange,
+  getApprovalForPayLaterTransfer,
+  createVault,
 };

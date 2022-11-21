@@ -1,7 +1,8 @@
 const { ethers } = require("ethers");
 const io = require("socket.io-client");
-const { requestMethodsMap } = require("./constants");
 const { getChainsConfig } = require("@gnosis.pm/safe-react-gateway-sdk");
+
+const { requestMethodsMap } = require("./constants");
 
 class DayfiSDK {
   constructor({ provider = {} }) {
@@ -45,7 +46,7 @@ class DayfiSDK {
     console.log({
       userAddress: this.walletAddress,
     });
-    this.socket = io(`http://localhost:9001/${this.partnerId}_${this.walletAddress}`);
+    this.socket = io(`https://socket.sandbox.dayfi.io/${this.partnerId}_${this.walletAddress}`);
     this.socket.on("welcome", (msg) => console.log(msg));
     this.socket.on("pending_requests", async (req) => {
       console.log({
@@ -90,7 +91,7 @@ class DayfiSDK {
     dayfiIframeWrapper.style.borderRadius = "16px";
 
     const containerIframe = document.createElement("iframe");
-    containerIframe.src = `http://localhost:3001/vault?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
+    containerIframe.src = `https://main.d2qs3oix9e2v7x.amplifyapp.com/vault?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
     containerIframe.style.width = "100%";
     containerIframe.style.height = "100%";
     containerIframe.style.borderRadius = "16px";

@@ -5,14 +5,14 @@ const {
   createVault,
 } = require("./helpers/requestHandlers");
 
-export const requestMethodsMap = {
+const requestMethodsMap = {
   getApprovalForPayLaterTransfer,
   getIsAccountConnected,
   triggerChainChange,
   createVault,
 };
 
-export const CHAIN_DETAILS = {
+const CHAIN_DETAILS = {
   80001: {
     chainId: "0x13881",
     rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
@@ -26,11 +26,11 @@ export const CHAIN_DETAILS = {
   },
 };
 
-export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-export const EMPTY_DATA = "0x";
-export const SALT = Date.now();
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+const EMPTY_DATA = "0x";
+const SALT = Date.now();
 
-export const NETWORK_MAP_DECIMAL = {
+const NETWORK_MAP_DECIMAL = {
   1: "Eth mainnet",
   5: "Goerli",
   56: "Bsc mainnet",
@@ -43,7 +43,7 @@ export const NETWORK_MAP_DECIMAL = {
   11155111: "Sepolia",
 };
 
-export const DEPLOYED_ADDRESS = {
+const DEPLOYED_ADDRESS = {
   5: {
     PayLaterLoanLibrary: "0xE4CCB02e634815F5767A66D7540810E8f4765Af1",
     FeeController: "0xBE126001b4f5D52CAc66369CBc68a38837a90b67",
@@ -76,4 +76,14 @@ export const DEPLOYED_ADDRESS = {
     SignMessageLib: "0xf3C2aB21A1caf8c7eDFD17E44C58E6344811D929",
     GnosisSafe: "0x2fA031a575c3800FCca4F1f3126aD90733539020",
   },
+};
+
+module.exports = {
+  requestMethodsMap,
+  CHAIN_DETAILS,
+  ZERO_ADDRESS,
+  EMPTY_DATA,
+  SALT,
+  NETWORK_MAP_DECIMAL,
+  DEPLOYED_ADDRESS,
 };

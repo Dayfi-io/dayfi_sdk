@@ -14,20 +14,20 @@ const Safe = require("../artifacts/Safe.json");
 const { checksumAddress } = require("./index");
 
 // constants
-export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-export const SAFE_VERSION_FOR_OFF_CHAIN_SIGNATURES = ">=1.0.0";
-export const GATEWAY_URL = "https://safe-client.gnosis.io";
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+const SAFE_VERSION_FOR_OFF_CHAIN_SIGNATURES = ">=1.0.0";
+const GATEWAY_URL = "https://safe-client.gnosis.io";
 const DEFAULT_MAX_GAS_FEE = 3.5e9; // 3.5 GWEI
 const DEFAULT_MAX_PRIO_FEE = 2.5e9; // 2.5 GWEI
-export const ParametersStatus = "ENABLED" | "DISABLED" | "SAFE_DISABLED" | "ETH_HIDDEN" | "CANCEL_TRANSACTION";
+const ParametersStatus = "ENABLED" | "DISABLED" | "SAFE_DISABLED" | "ETH_HIDDEN" | "CANCEL_TRANSACTION";
 
-export const EstimationStatus = {
+const EstimationStatus = {
   LOADING: "LOADING",
   FAILURE: "FAILURE",
   SUCCESS: "SUCCESS",
 };
 
-export const TX_NOTIFICATION_TYPES = {
+const TX_NOTIFICATION_TYPES = {
   STANDARD_TX: "STANDARD_TX",
   CONFIRMATION_TX: "CONFIRMATION_TX",
   CANCELLATION_TX: "CANCELLATION_TX",
@@ -65,7 +65,7 @@ const EIP712_DOMAIN = [
 ];
 
 // https://github.com/gnosis/safe-contracts/blob/main/docs/error_codes.md
-export const CONTRACT_ERRORS = {
+const CONTRACT_ERRORS = {
   // General init related
   GS000: "Could not finish initialization",
   GS001: "Threshold needs to be defined",
@@ -111,28 +111,28 @@ export const CONTRACT_ERRORS = {
   GS007: "You cannot transfer NFT with on going loan or mortgage",
 };
 
-export const CONTRACT_ERROR_CODES = Object.keys(CONTRACT_ERRORS);
+const CONTRACT_ERROR_CODES = Object.keys(CONTRACT_ERRORS);
 
 const isEnabledByVersion = (feature, version) => {
   if (!(feature in FEATURES_BY_VERSION)) return true;
   return semverSatisfies(version, FEATURES_BY_VERSION[feature]);
 };
 
-export const enabledFeatures = (version, currentChain) => {
+const enabledFeatures = (version, currentChain) => {
   const chainFeatures = currentChain.features;
   if (!version) return chainFeatures;
   return chainFeatures.filter((feat) => isEnabledByVersion(feat, version));
 };
 
-export const hasFeature = (name, version, currentChain) => {
+const hasFeature = (name, version, currentChain) => {
   return enabledFeatures(version, currentChain).includes(name);
 };
 
-export const isMaxFeeParam = (safeVersion, currentChain) => {
+const isMaxFeeParam = (safeVersion, currentChain) => {
   return hasFeature(FEATURES.EIP1559, safeVersion, currentChain);
 };
 
-export const createSendParams = (from, txParams, currentChain) => {
+const createSendParams = (from, txParams, currentChain) => {
   const sendParams = {
     from,
     value: 0,
@@ -150,7 +150,7 @@ export const createSendParams = (from, txParams, currentChain) => {
   return sendParams;
 };
 
-export const calculateGasOf = async (txConfig, provider) => {
+const calculateGasOf = async (txConfig, provider) => {
   try {
     const ethAdapter = new Web3(provider);
     return await ethAdapter.eth.estimateGas(txConfig);
@@ -160,7 +160,7 @@ export const calculateGasOf = async (txConfig, provider) => {
   }
 };
 
-export const estimateGasForDeployingSafe = (
+const estimateGasForDeployingSafe = (
   addresses,
   numOwners,
   userAccount,
@@ -190,15 +190,15 @@ const fetchGasPrice = async (gasPriceOracle) => {
   return gasPrice.toString();
 };
 
-export const getGasPriceOracles = (currentChain) => {
+const getGasPriceOracles = (currentChain) => {
   return currentChain.gasPrice.filter((gasPrice) => gasPrice.type == "ORACLE");
 };
 
-export const getFixedGasPrice = (currentChain) => {
+const getFixedGasPrice = (currentChain) => {
   return currentChain.gasPrice.filter((gasPrice) => gasPrice.type == "FIXED")[0];
 };
 
-export const calculateGasPrice = async (currentChain, provider) => {
+const calculateGasPrice = async (currentChain, provider) => {
   const gasPriceOracles = getGasPriceOracles(currentChain);
 
   if (gasPriceOracles.length > 0) {
@@ -222,7 +222,7 @@ export const calculateGasPrice = async (currentChain, provider) => {
   return await web3ReadOnly.eth.getGasPrice();
 };
 
-export const getFeesPerGas = async (provider) => {
+const getFeesPerGas = async (provider) => {
   let blocks;
   let maxPriorityFeePerGas;
   let baseFeePerGas;
@@ -253,11 +253,11 @@ export const getFeesPerGas = async (provider) => {
   };
 };
 
-export const setMaxPrioFeePerGas = (maxPriorityFeePerGas, maxFeePerGas) => {
+const setMaxPrioFeePerGas = (maxPriorityFeePerGas, maxFeePerGas) => {
   return maxPriorityFeePerGas > maxFeePerGas ? maxFeePerGas : maxPriorityFeePerGas;
 };
 
-export const getNativeCurrency = (currentChain) => {
+const getNativeCurrency = (currentChain) => {
   return currentChain.nativeCurrency;
 };
 
@@ -271,7 +271,7 @@ const lt100mFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 0 });
 // same format for billions and trillions
 const lt1000tFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 3, notation: "compact" });
 
-export const formatAmount = (number) => {
+const formatAmount = (number) => {
   let numberFloat = parseFloat(number);
 
   if (numberFloat === 0) {
@@ -299,12 +299,12 @@ export const formatAmount = (number) => {
   return numberFloat;
 };
 
-export const fromTokenUnit = (amount, decimals) => new BigNumber(amount).times(`1e-${decimals}`).toFixed();
+const fromTokenUnit = (amount, decimals) => new BigNumber(amount).times(`1e-${decimals}`).toFixed();
 
 const options = { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 8 };
 const usNumberFormatter = new Intl.NumberFormat("en-US", options);
 
-export const formatAmountInUsFormat = (amount) => {
+const formatAmountInUsFormat = (amount) => {
   const numberFloat = parseFloat(amount);
   return usNumberFormatter.format(numberFloat)?.replace("$", "");
 };
@@ -344,7 +344,7 @@ const estimateGas = async (
   };
 };
 
-export const EstimateSafeCreationGas = async ({
+const EstimateSafeCreationGas = async ({
   addresses,
   numOwners,
   safeCreationSalt,
@@ -415,7 +415,7 @@ const CanTxExecute = (preApprovingOwner, txConfirmations, SafeNonce, existingTxT
   return false;
 };
 
-export const checkIfOffChainSignatureIsPossible = (isExecution, isSmartContractWallet, safeVersion) => {
+const checkIfOffChainSignatureIsPossible = (isExecution, isSmartContractWallet, safeVersion) => {
   return (
     !isExecution &&
     !isSmartContractWallet &&
@@ -424,7 +424,7 @@ export const checkIfOffChainSignatureIsPossible = (isExecution, isSmartContractW
   );
 };
 
-export const sameString = (str1, str2) => {
+const sameString = (str1, str2) => {
   if (!str1 || !str2) {
     return false;
   }
@@ -432,9 +432,9 @@ export const sameString = (str1, str2) => {
   return str1.toLowerCase() === str2.toLowerCase();
 };
 
-export const isSpendingLimit = (txType) => sameString(txType, "spendingLimit");
+const isSpendingLimit = (txType) => sameString(txType, "spendingLimit");
 
-export const checkIfTxIsCreation = (txConfirmations, txType) => txConfirmations === 0 && !isSpendingLimit(txType);
+const checkIfTxIsCreation = (txConfirmations, txType) => txConfirmations === 0 && !isSpendingLimit(txType);
 
 const getDefaultGasEstimation = ({
   txEstimationExecutionStatus,
@@ -461,13 +461,13 @@ const getDefaultGasEstimation = ({
   };
 };
 
-export const checkIfTxIsApproveAndExecution = (threshold, txConfirmations, txType, preApprovingOwner) => {
+const checkIfTxIsApproveAndExecution = (threshold, txConfirmations, txType, preApprovingOwner) => {
   if (txConfirmations === threshold) return false;
   if (!preApprovingOwner) return false;
   return txConfirmations + 1 === threshold || isSpendingLimit(txType);
 };
 
-export const fetchSafeTxGasEstimation = async ({ safeAddress, currentChainId, ...body }) => {
+const fetchSafeTxGasEstimation = async ({ safeAddress, currentChainId, ...body }) => {
   return postSafeGasEstimation(GATEWAY_URL, currentChainId, checksumAddress(safeAddress), body);
 };
 
@@ -475,7 +475,7 @@ const FEATURES_BY_VERSION = {
   [FEATURES.SAFE_TX_GAS_OPTIONAL]: ">=1.3.0",
 };
 
-export const estimateSafeTxGas = async (
+const estimateSafeTxGas = async (
   { safeAddress, txData, txRecipient, txAmount, operation },
   safeVersion,
   currentChainId,
@@ -501,9 +501,9 @@ export const estimateSafeTxGas = async (
     throw error;
   }
 };
-export const EMPTY_DATA = "0x";
+const EMPTY_DATA = "0x";
 
-export const getPreValidatedSignatures = (from, initialString = EMPTY_DATA) => {
+const getPreValidatedSignatures = (from, initialString = EMPTY_DATA) => {
   console.log(from);
   return `${EMPTY_DATA}000000000000000000000000${from?.replace(
     EMPTY_DATA,
@@ -511,7 +511,7 @@ export const getPreValidatedSignatures = (from, initialString = EMPTY_DATA) => {
   )}000000000000000000000000000000000000000000000000000000000000000001`;
 };
 
-export const generateSignaturesFromTxConfirmations = (confirmations, preApprovingOwner) => {
+const generateSignaturesFromTxConfirmations = (confirmations, preApprovingOwner) => {
   let confirmationsMap =
     confirmations?.map((value) => {
       return {
@@ -579,7 +579,7 @@ const estimateGasForTransactionExecution = async ({
   );
 };
 
-export const estimateGasForTransactionApproval = async ({
+const estimateGasForTransactionApproval = async ({
   safeAddress,
   safeVersion,
   txRecipient,
@@ -614,7 +614,7 @@ export const estimateGasForTransactionApproval = async ({
   );
 };
 
-export const estimateTransactionGasLimit = async ({
+const estimateTransactionGasLimit = async ({
   txData,
   safeAddress,
   safeVersion,
@@ -666,7 +666,7 @@ export const estimateTransactionGasLimit = async ({
   });
 };
 
-export const calculateTotalGasCost = (gasLimit, gasPrice, gasMaxPrioFee, decimals) => {
+const calculateTotalGasCost = (gasLimit, gasPrice, gasMaxPrioFee, decimals) => {
   const totalPricePerGas = parseInt(gasPrice, 10) + parseInt(gasMaxPrioFee || "0", 10);
   const estimatedGasCosts = parseInt(gasLimit, 10) * totalPricePerGas;
   const gasCost = fromTokenUnit(estimatedGasCosts, decimals);
@@ -674,7 +674,7 @@ export const calculateTotalGasCost = (gasLimit, gasPrice, gasMaxPrioFee, decimal
   return [gasCost, formattedGasCost];
 };
 
-export const checkTransactionExecution = async ({
+const checkTransactionExecution = async ({
   safeAddress,
   safeVersion,
   txRecipient,
@@ -708,7 +708,7 @@ export const checkTransactionExecution = async ({
     .catch(() => false);
 };
 
-export const EstimateTransactionGas = async ({
+const EstimateTransactionGas = async ({
   txRecipient,
   txData,
   txConfirmations,
@@ -868,23 +868,23 @@ export const EstimateTransactionGas = async ({
   return gasEstimation;
 };
 
-export const sameAddress = (firstAddress, secondAddress) => {
+const sameAddress = (firstAddress, secondAddress) => {
   return sameString(firstAddress, secondAddress);
 };
-export const CHAIN_ID = {
+const CHAIN_ID = {
   UNKNOWN: "0",
   ETHEREUM: "1",
   RINKEBY: "4",
   VOLTA: "73799",
 };
-export const CK_ADDRESS = {
+const CK_ADDRESS = {
   [CHAIN_ID.ETHEREUM]: "0x06012c8cf97bead5deae237070f9587f8e7a266d",
   [CHAIN_ID.RINKEBY]: "0x16baf0de678e52367adc69fd067e5edd1d33e3bf",
 };
 
-export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = "42842e0e";
+const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = "42842e0e";
 
-export const getTransferMethodByContractAddress = (contractAddress, currentChainId) => {
+const getTransferMethodByContractAddress = (contractAddress, currentChainId) => {
   if (sameAddress(contractAddress, CK_ADDRESS[currentChainId])) {
     // on mainnet `transferFrom` seems to work fine but we can assure that `transfer` will work on both networks
     // so that's the reason why we're falling back to `transfer` for CryptoKitties
@@ -908,11 +908,11 @@ const createERC721TokenContract = (tokenAddress, provider) => {
   return new web3.eth.Contract(ERC721Contract.abi, tokenAddress);
 };
 
-export const getERC20TokenContract = createERC20TokenContract;
+const getERC20TokenContract = createERC20TokenContract;
 
-export const getERC721TokenContract = createERC721TokenContract;
+const getERC721TokenContract = createERC721TokenContract;
 
-export const generateERC721TransferTxData = async (tx, safeAddress, currentChainId, provider) => {
+const generateERC721TransferTxData = async (tx, safeAddress, currentChainId, provider) => {
   if (!safeAddress) {
     throw new Error("Failed to build NFT transfer tx data. SafeAddress is not defined.");
   }
@@ -933,7 +933,7 @@ export const generateERC721TransferTxData = async (tx, safeAddress, currentChain
   return NFTTokenInstance.methods[methodToCall](...transferParams).encodeABI();
 };
 
-export const getRecommendedNonce = async (safeAddress, currentChainId) => {
+const getRecommendedNonce = async (safeAddress, currentChainId) => {
   const { recommendedNonce } = await fetchSafeTxGasEstimation({
     safeAddress,
     value: "0",
@@ -946,7 +946,7 @@ export const getRecommendedNonce = async (safeAddress, currentChainId) => {
   return recommendedNonce;
 };
 
-export const getUserNonce = async (userAddress, provider) => {
+const getUserNonce = async (userAddress, provider) => {
   const web3 = new Web3(provider);
   try {
     return await web3.eth.getTransactionCount(userAddress, "pending");
@@ -955,7 +955,7 @@ export const getUserNonce = async (userAddress, provider) => {
   }
 };
 
-export const TransactionParameters = async (props) => {
+const TransactionParameters = async (props) => {
   let connectedWalletAddress = props?.connectedWalletAddress;
   let safeAddress = props?.safeAddress;
 
@@ -1022,7 +1022,7 @@ export const TransactionParameters = async (props) => {
   };
 };
 
-export const getParametersStatus = (isCreation, doExecute, isRejectTx = false) => {
+const getParametersStatus = (isCreation, doExecute, isRejectTx = false) => {
   return isCreation && !isRejectTx
     ? doExecute
       ? "ENABLED"
@@ -1032,7 +1032,7 @@ export const getParametersStatus = (isCreation, doExecute, isRejectTx = false) =
     : "DISABLED"; // when not creating, nonce cannot be edited
 };
 
-export const canExecuteCreatedTx = async (
+const canExecuteCreatedTx = async (
   safeInstance,
   nonce, // safe nonce
 ) => {
@@ -1066,7 +1066,7 @@ export const canExecuteCreatedTx = async (
   return false;
 };
 
-export const getEip712MessageTypes = (safeVersion) => {
+const getEip712MessageTypes = (safeVersion) => {
   const eip712WithChainId = semverSatisfies(safeVersion, ">=1.3.0");
 
   return {
@@ -1086,7 +1086,7 @@ export const getEip712MessageTypes = (safeVersion) => {
   };
 };
 
-export const generateTypedDataFrom = ({
+const generateTypedDataFrom = ({
   safeAddress,
   safeVersion,
   baseGas,
@@ -1128,7 +1128,7 @@ export const generateTypedDataFrom = ({
   return typedData;
 };
 
-export const getApprovalTransaction = (safeInstance, txHash) => {
+const getApprovalTransaction = (safeInstance, txHash) => {
   try {
     return safeInstance.methods.approveHash(txHash);
   } catch (err) {
@@ -1137,7 +1137,7 @@ export const getApprovalTransaction = (safeInstance, txHash) => {
   }
 };
 
-export const getExecutionTransaction = ({
+const getExecutionTransaction = ({
   baseGas,
   data,
   gasPrice,
@@ -1172,10 +1172,72 @@ export const getExecutionTransaction = ({
   }
 };
 
-export const decodeMessage = (message) => {
+const decodeMessage = (message) => {
   const code = CONTRACT_ERROR_CODES.find((code) => {
     return message.toUpperCase().includes(code.toUpperCase());
   });
 
   return code ? `${code}: ${CONTRACT_ERRORS[code]}` : message;
+};
+
+module.exports = {
+  ZERO_ADDRESS,
+  SAFE_VERSION_FOR_OFF_CHAIN_SIGNATURES,
+  GATEWAY_URL,
+  DEFAULT_MAX_GAS_FEE,
+  DEFAULT_MAX_PRIO_FEE,
+  ParametersStatus,
+  EstimationStatus,
+  TX_NOTIFICATION_TYPES,
+  CONTRACT_ERRORS,
+  CONTRACT_ERROR_CODES,
+  enabledFeatures,
+  hasFeature,
+  isMaxFeeParam,
+  calculateGasOf,
+  createSendParams,
+  estimateGasForDeployingSafe,
+  getGasPriceOracles,
+  getFixedGasPrice,
+  calculateGasPrice,
+  getFeesPerGas,
+  setMaxPrioFeePerGas,
+  getNativeCurrency,
+  formatAmount,
+  fromTokenUnit,
+  formatAmountInUsFormat,
+  EstimateSafeCreationGas,
+  checkIfOffChainSignatureIsPossible,
+  sameString,
+  isSpendingLimit,
+  checkIfTxIsCreation,
+  checkIfTxIsApproveAndExecution,
+  fetchSafeTxGasEstimation,
+  estimateSafeTxGas,
+  EMPTY_DATA,
+  getPreValidatedSignatures,
+  generateSignaturesFromTxConfirmations,
+  estimateGasForTransactionApproval,
+  estimateTransactionGasLimit,
+  calculateTotalGasCost,
+  checkTransactionExecution,
+  EstimateTransactionGas,
+  sameAddress,
+  CHAIN_ID,
+  CK_ADDRESS,
+  SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH,
+  getTransferMethodByContractAddress,
+  getERC20TokenContract,
+  getERC721TokenContract,
+  generateERC721TransferTxData,
+  getRecommendedNonce,
+  getUserNonce,
+  TransactionParameters,
+  getParametersStatus,
+  canExecuteCreatedTx,
+  getEip712MessageTypes,
+  generateTypedDataFrom,
+  getApprovalTransaction,
+  getExecutionTransaction,
+  decodeMessage,
 };
