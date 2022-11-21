@@ -1,0 +1,21 @@
+name: Deployment to NPM registry
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deployment:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: "https://registry.npmjs.org"
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Deploy to NPM registry
+        run: yarn publish --tag alpha
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
