@@ -28,7 +28,7 @@ class DayfiSDK {
       this.web3Provider.provider.on("chainChanged", (newNetwork) => {
         this.socket.emit("request_fullfilled", {
           id: "chainChanged",
-          chain: parseInt(newNetwork, 16),
+          chain: parseInt(newNetwork, 16)
         });
       });
     }
@@ -42,14 +42,14 @@ class DayfiSDK {
   async handleSignRequests() {
     this.walletAddress = await this.signer.getAddress();
     console.log({
-      userAddress: this.walletAddress,
+      userAddress: this.walletAddress
     });
     this.socket = io(`https://socket.sandbox.dayfi.io/${this.partnerId}_${this.walletAddress}`);
     this.socket.on("welcome", (msg) => console.log(msg));
     this.socket.on("pending_requests", async (req) => {
       console.log({
         req,
-        this: this,
+        this: this
       });
       const { id, method, params = {} } = req;
       try {
@@ -60,12 +60,12 @@ class DayfiSDK {
           provider: this.provider,
           firestore: this.firestore,
           ...params,
-          ...this.exeParams,
+          ...this.exeParams
         });
         if (res) {
           this.socket.emit("request_fullfilled", {
             id,
-            result: res,
+            result: res
           });
         }
       } catch (error) {
@@ -100,7 +100,7 @@ class DayfiSDK {
     dayfiContainer.appendChild(dayfiIframeWrapper);
     this.exeParams = { tokenDetails };
     this.exeParams = {
-      chainDetails: this.chainDetails,
+      chainDetails: this.chainDetails
     };
   }
 }

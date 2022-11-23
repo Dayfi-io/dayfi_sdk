@@ -7,4 +7,4 @@ tools/node-version-check.js
 tools/setup/setup-message.js
 **/*/*.test.js
 src/**/*.scss
-node_modules/*
+/node_modules

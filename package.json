@@ -13,6 +13,7 @@
   "homepage": "https://github.com/Dayfi-io/dayfi_sdk#readme",
   "scripts": {
     "lint": "eslint *.js",
+    "lint-fix": "eslint *.js --fix",
     "postinstall": "husky install",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable"

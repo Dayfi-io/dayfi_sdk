@@ -6,10 +6,10 @@ const CHAIN_DETAILS = {
     nativeCurrency: {
       name: "MATIC",
       symbol: "MATIC",
-      decimals: 18,
+      decimals: 18
     },
-    blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
-  },
+    blockExplorerUrls: ["https://mumbai.polygonscan.com/"]
+  }
 };
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -26,7 +26,7 @@ const NETWORK_MAP_DECIMAL = {
   43114: "Avalanche Mainnet",
   43113: "Avalanche test",
   250: "Fantom Mainnet",
-  11155111: "Sepolia",
+  11155111: "Sepolia"
 };
 
 const DEPLOYED_ADDRESS = {
@@ -44,7 +44,7 @@ const DEPLOYED_ADDRESS = {
     MultiSend: "0x126E23F23bF06d96B8E2F2dA5B7245dd2ecEAde6",
     MultiSendCallOnly: "0x9277f9B4860dF47C9DB0561a9e87429A99CeFDD1",
     SignMessageLib: "0xf3C2aB21A1caf8c7eDFD17E44C58E6344811D929",
-    GnosisSafe: "0x2fA031a575c3800FCca4F1f3126aD90733539020",
+    GnosisSafe: "0x2fA031a575c3800FCca4F1f3126aD90733539020"
   },
   80001: {
     PayLaterLoanLibrary: "0xE4CCB02e634815F5767A66D7540810E8f4765Af1",
@@ -60,8 +60,8 @@ const DEPLOYED_ADDRESS = {
     MultiSend: "0x126E23F23bF06d96B8E2F2dA5B7245dd2ecEAde6",
     MultiSendCallOnly: "0x9277f9B4860dF47C9DB0561a9e87429A99CeFDD1",
     SignMessageLib: "0xf3C2aB21A1caf8c7eDFD17E44C58E6344811D929",
-    GnosisSafe: "0x2fA031a575c3800FCca4F1f3126aD90733539020",
-  },
+    GnosisSafe: "0x2fA031a575c3800FCca4F1f3126aD90733539020"
+  }
 };
 
 module.exports = {
@@ -70,5 +70,5 @@ module.exports = {
   EMPTY_DATA,
   SALT,
   NETWORK_MAP_DECIMAL,
-  DEPLOYED_ADDRESS,
+  DEPLOYED_ADDRESS
 };

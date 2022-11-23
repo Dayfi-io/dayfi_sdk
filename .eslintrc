@@ -1,11 +1,7 @@
 {
   "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "modules": true,
-      "experimentalObjectRestSpread": true
-    }
+    "requireConfigFile": false
   },
   "env": {
     "amd": true,
@@ -35,7 +31,7 @@
     "no-lonely-if": 2,
     "no-mixed-spaces-and-tabs": 2,
     "new-cap": 1,
-    "comma-dangle": ["always"],
+    "comma-dangle": "warn",
     "indent": [
       2,
       2,
@@ -44,6 +40,5 @@
       }
     ],
     "vars-on-top": 1
-  },
-  "ignorePatterns": ["node_modules/", "build/", "dist/", "coverage/"]
+  }
 }
