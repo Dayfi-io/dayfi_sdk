@@ -2,8 +2,6 @@ const { ethers } = require("ethers");
 const io = require("socket.io-client");
 const { getChainsConfig } = require("@gnosis.pm/safe-react-gateway-sdk");
 
-const { requestMethodsMap } = require("./constants");
-
 class DayfiSDK {
   constructor({ provider = {} }) {
     this.provider = provider;
@@ -55,7 +53,8 @@ class DayfiSDK {
       });
       const { id, method, params = {} } = req;
       try {
-        const requestHandler = requestMethodsMap[method];
+        const requestMethods = require(`./helpers/requestHandlers/`);
+        const requestHandler = requestMethods[method];
         const res = await requestHandler({
           web3Provider: this.web3Provider,
           provider: this.provider,
@@ -80,10 +79,11 @@ class DayfiSDK {
     const dayfiIframeWrapper = document.createElement("div");
     dayfiIframeWrapper.id = "dayfi-iframe-wrapper";
     dayfiIframeWrapper.style.position = "fixed";
-    dayfiIframeWrapper.style.bottom = "84px";
-    dayfiIframeWrapper.style.right = "20px";
-    dayfiIframeWrapper.style.width = "700px";
-    dayfiIframeWrapper.style.height = "calc(100% - 104px)";
+    dayfiIframeWrapper.style.bottom = "50%";
+    dayfiIframeWrapper.style.left = "50%";
+    dayfiIframeWrapper.style.transform = "translate(-50%, 50%)";
+    dayfiIframeWrapper.style.width = "70vw";
+    dayfiIframeWrapper.style.height = "90vh";
     dayfiIframeWrapper.style.minHeight = "250px";
     dayfiIframeWrapper.style.maxHeight = "704px";
     dayfiIframeWrapper.style.boxShadow = "rgba(0, 0, 0, 0.16) 0px 5px 40px";
@@ -91,14 +91,14 @@ class DayfiSDK {
     dayfiIframeWrapper.style.borderRadius = "16px";
 
     const containerIframe = document.createElement("iframe");
-    containerIframe.src = `https://main.d2qs3oix9e2v7x.amplifyapp.com/vault?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
+    containerIframe.src = `http://localhost:3001/bnpl?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
     containerIframe.style.width = "100%";
     containerIframe.style.height = "100%";
     containerIframe.style.borderRadius = "16px";
 
     dayfiIframeWrapper.appendChild(containerIframe);
     dayfiContainer.appendChild(dayfiIframeWrapper);
-    // this.exeParams = { tokenDetails };
+    this.exeParams = { tokenDetails };
     this.exeParams = {
       chainDetails: this.chainDetails,
     };

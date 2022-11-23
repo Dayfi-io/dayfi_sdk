@@ -1,17 +1,3 @@
-const {
-  getApprovalForPayLaterTransfer,
-  getIsAccountConnected,
-  triggerChainChange,
-  createVault,
-} = require("./helpers/requestHandlers");
-
-const requestMethodsMap = {
-  getApprovalForPayLaterTransfer,
-  getIsAccountConnected,
-  triggerChainChange,
-  createVault,
-};
-
 const CHAIN_DETAILS = {
   80001: {
     chainId: "0x13881",
@@ -79,7 +65,6 @@ const DEPLOYED_ADDRESS = {
 };
 
 module.exports = {
-  requestMethodsMap,
   CHAIN_DETAILS,
   ZERO_ADDRESS,
   EMPTY_DATA,
