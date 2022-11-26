@@ -11,8 +11,10 @@ const {
   canExecuteCreatedTx,
   getPreValidatedSignatures,
   getExecutionTransaction,
+  TX_NOTIFICATION_TYPES,
 } = require("./../../utils/gasUtils");
 const Web3 = require("web3");
+const { Operation } = require("@gnosis.pm/safe-react-gateway-sdk");
 
 const createVault = async ({ provider, chainId, accounts, chainDetails, currentUserAddress }) => {
   try {
@@ -97,18 +99,28 @@ const createVault = async ({ provider, chainId, accounts, chainDetails, currentU
   }
 };
 
-const transferNFTFromVault = async ({ NFT, provider, chainId, chainDetails, vaultAddress, recipientAddress }) => {
+const transferNFTFromVault = async ({
+  tokenDetails,
+  provider,
+  chainId,
+  chainDetails,
+  vaultAddress,
+  recipientAddress,
+  currentUser,
+}) => {
   try {
+    const { ZERO_ADDRESS } = require("../../constants");
     const web3Js = new Web3(provider);
     const currentChainId = chainId;
-    const currentChain = search(currentChainId, chainDetails);
+    const currentChain = search(String(chainId), chainDetails);
     const SafeNonce = await web3Js.eth.getTransactionCount(vaultAddress, "pending");
     const tx = {
-      token_address: NFT.token_address,
-      assetName: NFT.name,
+      token_address: tokenDetails.token_address,
+      assetName: tokenDetails.name,
       recipientAddress: recipientAddress,
-      token_id: NFT.token_id,
+      token_id: tokenDetails.token_id,
     };
+
     const txData = await generateERC721TransferTxData(tx, vaultAddress, currentChainId, provider);
 
     const {
@@ -123,11 +135,11 @@ const transferNFTFromVault = async ({ NFT, provider, chainId, chainDetails, vaul
       canTxExecute,
     } = await EstimateTransactionGas({
       txData,
-      txRecipient: NFT.token_address || vaultAddress,
+      txRecipient: tokenDetails.token_address || vaultAddress,
       txType: undefined,
       txConfirmations: undefined,
       txAmount: "0",
-      preApprovingOwner: account,
+      preApprovingOwner: currentUser,
       safeTxGas: "0",
       manualGasPrice: undefined,
       manualMaxPrioFee: undefined,
@@ -138,7 +150,7 @@ const transferNFTFromVault = async ({ NFT, provider, chainId, chainDetails, vaul
       currentChainId,
       provider,
       vaultAddress,
-      account,
+      account: currentUser,
       SafeNonce,
     });
 
@@ -154,14 +166,14 @@ const transferNFTFromVault = async ({ NFT, provider, chainId, chainDetails, vaul
       initialSafeNonce: SafeNonce,
       initialSafeTxGas: gasEstimation,
       provider: provider,
-      connectedWalletAddress: account,
+      connectedWalletAddress: currentUser,
       safeAddress: vaultAddress,
       currentChainId: currentChainId,
     });
 
     const txProps = {
       vaultAddress,
-      to: NFT.token_address,
+      to: tokenDetails.token_address,
       valueInWei: "0",
       txNonce: SafeNonce,
       safeTxGas: txParameters.safeTxGas,
@@ -191,15 +203,15 @@ const transferNFTFromVault = async ({ NFT, provider, chainId, chainDetails, vaul
       gasPrice: "0",
       gasToken: ZERO_ADDRESS,
       refundReceiver: ZERO_ADDRESS,
-      sender: account,
+      sender: currentUser,
       // We're making a new tx, so there are no other signatures
       // Just pass our own address for an unsigned execution
       // Contract will compare the sender address to this
-      sigs: getPreValidatedSignatures(account),
-      tokenId: NFT.token_id,
+      sigs: getPreValidatedSignatures(currentUser),
+      tokenId: tokenDetails.token_id,
     };
 
-    const promiEvent = await getExecutionTransaction(txArgs).send({ from: account });
+    const promiEvent = await getExecutionTransaction(txArgs).send({ from: currentUser });
     const result = new Promise((resolve, reject) => {
       promiEvent.once("transactionHash", resolve); // this happens much faster than receipt
       promiEvent.once("error", reject);
