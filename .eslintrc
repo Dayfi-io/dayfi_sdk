@@ -31,13 +31,6 @@
     "no-lonely-if": 2,
     "no-mixed-spaces-and-tabs": 2,
     "new-cap": 1,
-    "indent": [
-      2,
-      2,
-      {
-        "SwitchCase": 1
-      }
-    ],
     "vars-on-top": 1
   }
 }

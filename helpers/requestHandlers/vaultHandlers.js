@@ -100,7 +100,7 @@ const createVault = async ({ provider, chainId, accounts, chainDetails, currentU
 };
 
 const transferNFTFromVault = async ({
-  tokenDetails,
+ 
   provider,
   chainId,
   chainDetails,
@@ -109,6 +109,15 @@ const transferNFTFromVault = async ({
   currentUser,
 }) => {
   try {
+    console.log({
+      tokenDetails,
+      provider,
+      chainId,
+      chainDetails,
+      vaultAddress,
+      recipientAddress,
+      currentUser,
+    });
     const { ZERO_ADDRESS } = require("../../constants");
     const web3Js = new Web3(provider);
     const currentChainId = chainId;

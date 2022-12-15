@@ -2,7 +2,7 @@
   "_format": "hh-sol-artifact-1",
   "contractName": "GnosisSafe",
   "sourceName": "contracts/GnosisSafe.sol",
-  "defaultAddress": "0xF6d880264f79C73ADAde9E9Dd06d173E1A11A059",
+  "defaultAddress": "0x2fA031a575c3800FCca4F1f3126aD90733539020",
   "abi": [
     {
       "inputs": [],

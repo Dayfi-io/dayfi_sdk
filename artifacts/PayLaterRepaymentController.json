@@ -2,7 +2,7 @@
     "_format": "hh-sol-artifact-1",
     "contractName": "PayLaterRepaymentController",
     "sourceName": "contracts/PayLaterRepaymentController.sol",
-    "defaultAddress": "0x20E377Ff5080fa46a2Ad08ee33EC63A93dFAD12A",
+    "defaultAddress": "0xe3D2c405B58d7AEf9d5e19E8fda31F18C10AE943",
     "abi": [
       {
         "inputs": [
