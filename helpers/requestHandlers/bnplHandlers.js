@@ -54,7 +54,7 @@ const buyPayLaterNFT = async ({ provider, chain, web3Provider }) => {
       ListingPrice: "0.02",
       lender: "0x23cC353858Cbf5cc7F16C47484a29556f6cE00C3",
       terms: {
-        loanDuration: 172800,
+        loanDuration: 600,
         rateOfInterest: 1,
         installments: 2,
       },
@@ -78,7 +78,7 @@ const buyPayLaterNFT = async ({ provider, chain, web3Provider }) => {
         // The amount of interest in terms of the payableCurrency
         interest: terms.rateOfInterest,
         // The tokenID of the collateral bundle
-        collateralTokenId: tokenDetails.token_id,
+        collateralTokenId: parseInt(tokenDetails.token_id),
         // The payable currency for the loan principal and interest
         payableCurrency: wETH.address,
         // The number parts in the payment cycle
@@ -150,7 +150,7 @@ const buyPayLaterNFT = async ({ provider, chain, web3Provider }) => {
 
 const repayPayLaterLoan = async ({ chain, web3Provider }) => {
   try {
-    const loanId = 2; //to be changed later
+    const loanId = 3; //to be changed later
 
     const { DEPLOYED_ADDRESS } = require("../../constants");
     const { getLoanDetailsByLoanId } = require("./../../utils/bnplUtils");
@@ -169,37 +169,65 @@ const repayPayLaterLoan = async ({ chain, web3Provider }) => {
       pendingInstallment,
     });
 
-    console.log({ parsedInstallment: ethers.utils.formatEther(pendingInstallment[0].toString()) });
+    // console.log({ parsedInstallment: ethers.utils.formatEther(pendingInstallment[0].toString()) });
 
-    const wETHContractInstance = new ethers.Contract(wETH.address, wETH.abi, signer);
-    const approveRequest = await wETHContractInstance.approve(
+    // const wETHContractInstance = new ethers.Contract(wETH.address, wETH.abi, signer);
+    // const approveRequest = await wETHContractInstance.approve(
+    //   DEPLOYED_ADDRESS[5].RepaymentController,
+    //   pendingInstallment[0],
+    // );
+
+    // await approveRequest.wait();
+
+    // const repayment = await repaymentControllerInstance.repay(parseInt(loanId));
+
+    // const paylaterCoreInstance = new ethers.Contract(
+    //   DEPLOYED_ADDRESS[5].PayLaterLoanCore,
+    //   PayLaterLoanCore.abi,
+    //   signer,
+    // );
+
+    // paylaterCoreInstance.on("LoanRepaid", (...args) => {
+    //   console.log({
+    //     args,
+    //   });
+    // });
+
+    // await repayment.wait();
+
+    // console.log({
+    //   paylaterCoreInstance,
+    // });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const claimPayLaterLoan = async ({ web3Provider }) => {
+  try {
+    const loanId = 5; //to be changed later
+    const { DEPLOYED_ADDRESS } = require("../../constants");
+
+    const signer = web3Provider.getSigner();
+    const repaymentControllerInstance = new ethers.Contract(
       DEPLOYED_ADDRESS[5].RepaymentController,
-      pendingInstallment[0],
+      PaylaterRepaymentController.abi,
+      signer,
     );
 
-    await approveRequest.wait();
-
-    const repayment = await repaymentControllerInstance.repay(parseInt(loanId));
-
+    await repaymentControllerInstance.claim(parseInt(loanId));
     const paylaterCoreInstance = new ethers.Contract(
       DEPLOYED_ADDRESS[5].PayLaterLoanCore,
       PayLaterLoanCore.abi,
       signer,
     );
-
-    paylaterCoreInstance.on("LoanRepaid", (...args) => {
+    paylaterCoreInstance.on("LoanClaimed", (...args) => {
       console.log({
         args,
       });
     });
-
-    await repayment.wait();
-
-    console.log({
-      paylaterCoreInstance,
-    });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -207,4 +235,5 @@ module.exports = {
   getApprovalForPayLaterTransfer,
   buyPayLaterNFT,
   repayPayLaterLoan,
+  claimPayLaterLoan,
 };
