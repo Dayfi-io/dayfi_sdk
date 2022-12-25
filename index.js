@@ -2,6 +2,8 @@ const { ethers } = require("ethers");
 const io = require("socket.io-client");
 const { getChainsConfig } = require("@gnosis.pm/safe-react-gateway-sdk");
 
+const iframeBaseUrl = "http://localhost:3001";
+
 class DayfiSDK {
   constructor({ provider = {} }) {
     this.provider = provider;
@@ -73,31 +75,42 @@ class DayfiSDK {
     });
   }
 
-  openBuyNowPayLater(tokenDetails = {}) {
+  openBNPLApproval(
+    tokenDetails = {
+      token_address: "",
+      token_id: "",
+      contract_type: "",
+      name: "",
+    },
+  ) {
+    const { generateDayFiContainer } = require("./helpers/generalHelpers");
     const dayfiContainer = document.getElementById("dayfi-container");
-    const dayfiIframeWrapper = document.createElement("div");
-    dayfiIframeWrapper.id = "dayfi-iframe-wrapper";
-    dayfiIframeWrapper.style.position = "fixed";
-    dayfiIframeWrapper.style.bottom = "50%";
-    dayfiIframeWrapper.style.left = "50%";
-    dayfiIframeWrapper.style.transform = "translate(-50%, 50%)";
-    dayfiIframeWrapper.style.width = "70vw";
-    dayfiIframeWrapper.style.height = "90vh";
-    dayfiIframeWrapper.style.minHeight = "250px";
-    dayfiIframeWrapper.style.maxHeight = "704px";
-    dayfiIframeWrapper.style.boxShadow = "rgba(0, 0, 0, 0.16) 0px 5px 40px";
-    dayfiIframeWrapper.style.zIndex = "2147483000";
-    dayfiIframeWrapper.style.borderRadius = "16px";
-
-    const containerIframe = document.createElement("iframe");
-    containerIframe.src = `http://localhost:3001/bnpl?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
-    containerIframe.style.width = "100%";
-    containerIframe.style.height = "100%";
-    containerIframe.style.borderRadius = "16px";
-
-    dayfiIframeWrapper.appendChild(containerIframe);
+    const dayfiIframeWrapper = generateDayFiContainer({
+      url: `${iframeBaseUrl}/bnpl/approve?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`,
+      height: "70vh",
+      width: "90vw",
+    });
+    this.exeParams = { tokenDetails };
     dayfiContainer.appendChild(dayfiIframeWrapper);
+  }
+
+  openTransferNft(
+    tokenDetails = {
+      token_address: "",
+      token_id: "",
+      contract_type: "",
+      name: "",
+    },
+  ) {
+    const { generateDayFiContainer } = require("./helpers/generalHelpers");
+    const dayfiContainer = document.getElementById("dayfi-container");
+    const dayfiIframeWrapper = generateDayFiContainer({
+      url: `${iframeBaseUrl}/transfer?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`,
+      height: "70vh",
+      width: "90vw",
+    });
     this.exeParams = { tokenDetails, chainDetails: this.chainDetails };
+    dayfiContainer.appendChild(dayfiIframeWrapper);
   }
 }
 

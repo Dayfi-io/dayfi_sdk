@@ -2,7 +2,6 @@ const Web3 = require("web3");
 const { fromWei, toWei } = require("web3-utils");
 const axios = require("axios");
 const { List } = require("immutable");
-const { ethers } = require("ethers");
 const { BigNumber } = require("bignumber.js");
 const semverSatisfies = require("semver/functions/satisfies");
 const { postSafeGasEstimation, Operation, FEATURES } = require("@gnosis.pm/safe-react-gateway-sdk");
