@@ -24,6 +24,17 @@ const generateDayFiContainer = ({ url, height = "70vh", width = "90vw" }) => {
   return dayfiIframeWrapper;
 };
 
+const handleBNPLayout = ({ type, partnerId, walletAddress }) => {
+  const dayfiContainer = document.getElementById("dayfi-container");
+  const dayfiIframeWrapper = generateDayFiContainer({
+    url: `${iframeBaseUrl}/bnpl/${type}?partnerId=${partnerId}&walletAddress=${walletAddress}`,
+    height: "70vh",
+    width: "90vw",
+  });
+  dayfiContainer.appendChild(dayfiIframeWrapper);
+};
+
 module.exports = {
   generateDayFiContainer,
+  handleBNPLayout,
 };

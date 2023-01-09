@@ -1149,21 +1149,26 @@ const getExecutionTransaction = ({
   to,
   valueInWei,
   tokenId,
+  tokenType,
 }) => {
   try {
-    return safeInstance.methods.execTransaction(
+    const execTransactionData = {
       to,
-      valueInWei,
-      data,
+      value: valueInWei,
       operation,
       safeTxGas,
       baseGas,
       gasPrice,
       gasToken,
       refundReceiver,
-      sigs,
+    };
+
+    const tokenData = {
       tokenId,
-    );
+      tokenType,
+    };
+
+    return safeInstance.methods.execTransaction(data, sigs, tokenData, execTransactionData);
   } catch (err) {
     console.error(`Error while creating transaction: ${err}`);
 

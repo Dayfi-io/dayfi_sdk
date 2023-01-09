@@ -225,7 +225,8 @@ const transferNFTFromVault = async ({
       // Just pass our own address for an unsigned execution
       // Contract will compare the sender address to this
       sigs: getPreValidatedSignatures(currentUser),
-      tokenId: tokenType,
+      tokenType: tokenType,
+      tokenId: tokenDetails.token_id,
     };
 
     console.log({

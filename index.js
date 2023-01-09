@@ -3,6 +3,7 @@ const io = require("socket.io-client");
 const { getChainsConfig } = require("@gnosis.pm/safe-react-gateway-sdk");
 
 const iframeBaseUrl = "http://localhost:3001";
+const soketBackendUrl = "https://socket.sandbox.dayfi.io";
 
 class DayfiSDK {
   constructor({ provider = {} }) {
@@ -46,7 +47,7 @@ class DayfiSDK {
     console.log({
       userAddress: this.walletAddress,
     });
-    this.socket = io(`https://socket.sandbox.dayfi.io/${this.partnerId}_${this.walletAddress}`);
+    this.socket = io(`${soketBackendUrl}/${this.partnerId}_${this.walletAddress}`);
     this.socket.on("welcome", (msg) => console.log(msg));
     this.socket.on("pending_requests", async (req) => {
       console.log({
@@ -75,33 +76,50 @@ class DayfiSDK {
     });
   }
 
-  openBNPLApproval(
+  openBNPLApproval({
     tokenDetails = {
       token_address: "",
       token_id: "",
       contract_type: "",
       name: "",
     },
-  ) {
-    const { generateDayFiContainer } = require("./helpers/generalHelpers");
-    const dayfiContainer = document.getElementById("dayfi-container");
-    const dayfiIframeWrapper = generateDayFiContainer({
-      url: `${iframeBaseUrl}/bnpl/approve?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`,
-      height: "70vh",
-      width: "90vw",
-    });
+  }) {
+    const { handleBNPLayout } = require("./helpers/generalHelpers");
     this.exeParams = { tokenDetails };
-    dayfiContainer.appendChild(dayfiIframeWrapper);
+    handleBNPLayout({
+      partnerId: this.partnerId,
+      walletAddress: this.walletAddress,
+      tokenDetails,
+      type: "approval",
+    });
   }
 
-  openTransferNft(
+  openBNPLCheckout({
     tokenDetails = {
       token_address: "",
       token_id: "",
       contract_type: "",
       name: "",
     },
-  ) {
+  }) {
+    const { handleBNPLayout } = require("./helpers/generalHelpers");
+    this.exeParams = { tokenDetails };
+    handleBNPLayout({
+      partnerId: this.partnerId,
+      walletAddress: this.walletAddress,
+      tokenDetails,
+      type: "checkout",
+    });
+  }
+
+  openTransferNft({
+    tokenDetails = {
+      token_address: "",
+      token_id: "",
+      contract_type: "",
+      name: "",
+    },
+  }) {
     const { generateDayFiContainer } = require("./helpers/generalHelpers");
     const dayfiContainer = document.getElementById("dayfi-container");
     const dayfiIframeWrapper = generateDayFiContainer({
@@ -111,6 +129,23 @@ class DayfiSDK {
     });
     this.exeParams = { tokenDetails, chainDetails: this.chainDetails };
     dayfiContainer.appendChild(dayfiIframeWrapper);
+  }
+
+  getCurrentUserVaultAddress({ userAddress = "" }) {
+    //make API call to DayFi's server to get vault address
+    return "0x68d68DA8A7B994F624fed7b387781880283108Cc";
+  }
+
+  renderLoanBook({ containerId = "" }) {
+    const screenContainer = document.getElementById(containerId);
+    const url = `${iframeBaseUrl}/loanbook/${type}?partnerId=${partnerId}&walletAddress=${walletAddress}`;
+
+    const containerIframe = document.createElement("iframe");
+    containerIframe.src = url;
+    containerIframe.style.width = "100%";
+    containerIframe.style.height = "100%";
+
+    screenContainer.appendChild(containerIframe);
   }
 }
 
