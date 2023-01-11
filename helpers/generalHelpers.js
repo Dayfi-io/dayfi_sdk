@@ -1,3 +1,5 @@
+const { getChainsConfig } = require("@gnosis.pm/safe-react-gateway-sdk");
+
 const generateDayFiContainer = ({ url, height = "70vh", width = "90vw" }) => {
   const dayfiIframeWrapper = document.createElement("div");
   dayfiIframeWrapper.id = "dayfi-iframe-wrapper";
@@ -34,7 +36,23 @@ const handleBNPLayout = ({ type, partnerId, walletAddress }) => {
   dayfiContainer.appendChild(dayfiIframeWrapper);
 };
 
+const handleChainChange = async ({ socket, web3Provider }) => {
+  web3Provider.provider.on("chainChanged", (newNetwork) => {
+    socket.emit("request_fullfilled", {
+      id: "chainChanged",
+      chain: parseInt(newNetwork, 16),
+    });
+  });
+};
+
+const getChainDetails = async () => {
+  const { results } = await getChainsConfig("https://safe-client.gnosis.io");
+  return results;
+};
+
 module.exports = {
   generateDayFiContainer,
   handleBNPLayout,
+  handleChainChange,
+  getChainDetails,
 };
