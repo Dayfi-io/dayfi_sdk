@@ -2,7 +2,7 @@
     "_format": "hh-sol-artifact-1",
     "contractName": "PayLaterFeeController",
     "sourceName": "contracts/FeeController.sol",
-    "defaultAddress": "0xA458c500b61d33E56B009Bf9225C9CEc26767ab4",
+    "defaultAddress": "0xBE126001b4f5D52CAc66369CBc68a38837a90b67",
     "abi": [
       {
         "inputs": [],

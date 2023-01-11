@@ -2,7 +2,7 @@
   "_format": "hh-sol-artifact-1",
   "contractName": "OriginationManager",
   "sourceName": "contracts/OriginationManager.sol",
-  "defaultAddress": "0xBE016815E82206ABeb3a1f60c1729f3Bb4856CE4",
+  "defaultAddress": "0xA606415C746316705e947175d6b353Bf95583464",
   "abi": [
     {
       "inputs": [

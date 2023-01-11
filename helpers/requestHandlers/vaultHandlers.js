@@ -100,7 +100,6 @@ const createVault = async ({ provider, chainId, accounts, chainDetails, currentU
 };
 
 const transferNFTFromVault = async ({
-  tokenDetails,
   provider,
   chainId,
   chainDetails,
@@ -109,6 +108,22 @@ const transferNFTFromVault = async ({
   currentUser,
 }) => {
   try {
+    const tokenDetails = {
+      token_address: "0xf5de760f2e916647fd766b4ad9e85ff943ce3a2b",
+      token_id: "1837486",
+      contract_type: "ERC721",
+      name: "MultiFaucet Test NFT",
+    };
+
+    console.log({
+      tokenDetails,
+      provider,
+      chainId,
+      chainDetails,
+      vaultAddress,
+      recipientAddress,
+      currentUser,
+    });
     const { ZERO_ADDRESS } = require("../../constants");
     const web3Js = new Web3(provider);
     const currentChainId = chainId;
@@ -191,6 +206,8 @@ const transferNFTFromVault = async ({
 
     const isFinalization = await canExecuteCreatedTx(safeInstance, SafeNonce);
 
+    const tokenType = tokenDetails.contract_type === "ERC721" ? 0 : tokenDetails.contract_type === "ERC1155" ? 1 : 3;
+
     const txArgs = {
       safeInstance: safeInstance,
       to: txProps.to,
@@ -208,8 +225,13 @@ const transferNFTFromVault = async ({
       // Just pass our own address for an unsigned execution
       // Contract will compare the sender address to this
       sigs: getPreValidatedSignatures(currentUser),
+      tokenType: tokenType,
       tokenId: tokenDetails.token_id,
     };
+
+    console.log({
+      txArgs,
+    });
 
     const promiEvent = await getExecutionTransaction(txArgs).send({ from: currentUser });
     const result = new Promise((resolve, reject) => {

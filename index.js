@@ -1,104 +1,163 @@
 const { ethers } = require("ethers");
 const io = require("socket.io-client");
-const { getChainsConfig } = require("@gnosis.pm/safe-react-gateway-sdk");
 
-class DayfiSDK {
-  constructor({ provider = {} }) {
-    this.provider = provider;
-    this.web3Provider = new ethers.providers.Web3Provider(this.provider);
-    this.signer = this.web3Provider.getSigner();
-    this.walletAddress = null;
-    this.exeParams = null;
-    this.partnerId = "opensea";
-    this.socket = null;
-    this.chainDetails = null;
-    this.init();
-  }
+const iframeBaseUrl = "http://localhost:3001";
+const soketBackendUrl = "https://socket.sandbox.dayfi.io";
 
-  async init() {
-    if (!document.getElementById("dayfi-container")) {
-      const dayfiContainer = document.createElement("div");
-      dayfiContainer.id = "dayfi-container";
-      document.body.appendChild(dayfiContainer);
-      if (window) {
-        window.Dayfi = this;
-      }
-      this.handleSignRequests();
-      this.getChainDetails();
-      this.web3Provider.provider.on("chainChanged", (newNetwork) => {
-        this.socket.emit("request_fullfilled", {
-          id: "chainChanged",
-          chain: parseInt(newNetwork, 16),
-        });
-      });
-    }
-  }
+let exeParams = {};
 
-  async getChainDetails() {
-    const { results } = await getChainsConfig("https://safe-client.gnosis.io");
-    this.chainDetails = results;
-  }
-
-  async handleSignRequests() {
-    this.walletAddress = await this.signer.getAddress();
+const handleSignRequests = async ({ socket }) => {
+  socket.on("welcome", (msg) => console.log(msg));
+  socket.on("pending_requests", async (req) => {
     console.log({
-      userAddress: this.walletAddress,
+      req,
     });
-    this.socket = io(`https://socket.sandbox.dayfi.io/${this.partnerId}_${this.walletAddress}`);
-    this.socket.on("welcome", (msg) => console.log(msg));
-    this.socket.on("pending_requests", async (req) => {
-      console.log({
-        req,
-        this: this,
+    const { id, method, params = {} } = req;
+    try {
+      const requestMethods = require(`./requestHandlers`);
+      const requestHandler = requestMethods[method];
+      const res = await requestHandler({
+        ...params,
+        ...exeParams,
       });
-      const { id, method, params = {} } = req;
-      try {
-        const requestMethods = require(`./helpers/requestHandlers/`);
-        const requestHandler = requestMethods[method];
-        const res = await requestHandler({
-          web3Provider: this.web3Provider,
-          provider: this.provider,
-          ...params,
-          ...this.exeParams,
+      if (res) {
+        socket.emit("request_fullfilled", {
+          id,
+          result: res,
         });
-        if (res) {
-          this.socket.emit("request_fullfilled", {
-            id,
-            result: res,
-          });
-        }
-      } catch (error) {
-        console.log(error);
       }
-    });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+};
+
+const initDayFiSdk = ({ provider = {}, partnerId = "opensea", walletAddress = null }) => {
+  /*
+     This function will return a general
+     object that will have information 
+     like partnerId and walletAddress.
+  */
+
+  const { handleChainChange } = require("./helpers/generalHelpers");
+
+  const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
+  const web3Provider = new ethers.providers.Web3Provider(provider);
+
+  if (!document.getElementById("dayfi-container")) {
+    const dayfiContainer = document.createElement("div");
+    dayfiContainer.id = "dayfi-container";
+    document.body.appendChild(dayfiContainer);
+
+    handleSignRequests({ socket });
+    handleChainChange({ socket, web3Provider });
   }
 
-  openBuyNowPayLater(tokenDetails = {}) {
-    const dayfiContainer = document.getElementById("dayfi-container");
-    const dayfiIframeWrapper = document.createElement("div");
-    dayfiIframeWrapper.id = "dayfi-iframe-wrapper";
-    dayfiIframeWrapper.style.position = "fixed";
-    dayfiIframeWrapper.style.bottom = "50%";
-    dayfiIframeWrapper.style.left = "50%";
-    dayfiIframeWrapper.style.transform = "translate(-50%, 50%)";
-    dayfiIframeWrapper.style.width = "70vw";
-    dayfiIframeWrapper.style.height = "90vh";
-    dayfiIframeWrapper.style.minHeight = "250px";
-    dayfiIframeWrapper.style.maxHeight = "704px";
-    dayfiIframeWrapper.style.boxShadow = "rgba(0, 0, 0, 0.16) 0px 5px 40px";
-    dayfiIframeWrapper.style.zIndex = "2147483000";
-    dayfiIframeWrapper.style.borderRadius = "16px";
+  return {
+    dayfiConfig: {
+      partnerId,
+      walletAddress,
+    },
+  };
+};
 
-    const containerIframe = document.createElement("iframe");
-    containerIframe.src = `https://main.d2qs3oix9e2v7x.amplifyapp.com/bnpl?partnerId=${this.partnerId}&walletAddress=${this.walletAddress}`;
-    containerIframe.style.width = "100%";
-    containerIframe.style.height = "100%";
-    containerIframe.style.borderRadius = "16px";
+const openBNPLApproval = ({
+  tokenDetails = {
+    token_address: "",
+    token_id: "",
+    contract_type: "",
+    name: "",
+  },
+  dayfiConfig,
+  provider,
+}) => {
+  const web3Provider = new ethers.providers.Web3Provider(provider);
+  const { partnerId, walletAddress } = dayfiConfig;
 
-    dayfiIframeWrapper.appendChild(containerIframe);
-    dayfiContainer.appendChild(dayfiIframeWrapper);
-    this.exeParams = { tokenDetails, chainDetails: this.chainDetails };
-  }
-}
+  const { handleBNPLayout } = require("./helpers/generalHelpers").default;
+  exeParams = { tokenDetails, web3Provider, provider };
+  handleBNPLayout({
+    partnerId: partnerId,
+    walletAddress: walletAddress,
+    tokenDetails,
+    type: "approval",
+  });
+};
 
-module.exports = DayfiSDK;
+const openBNPLCheckout = ({
+  tokenDetails = {
+    token_address: "",
+    token_id: "",
+    contract_type: "",
+    name: "",
+  },
+  dayfiConfig,
+  provider,
+}) => {
+  const web3Provider = new ethers.providers.Web3Provider(provider);
+  const { partnerId, walletAddress } = dayfiConfig;
+
+  const { handleBNPLayout } = require("./helpers/generalHelpers").default;
+  exeParams = { tokenDetails, web3Provider, provider };
+  handleBNPLayout({
+    partnerId: partnerId,
+    walletAddress: walletAddress,
+    tokenDetails,
+    type: "checkout",
+  });
+};
+
+const openTransferNft = async ({
+  tokenDetails = {
+    token_address: "",
+    token_id: "",
+    contract_type: "",
+    name: "",
+  },
+  dayfiConfig,
+  provider,
+}) => {
+  const { getChainDetails } = require("./helpers/generalHelpers");
+
+  const web3Provider = new ethers.providers.Web3Provider(provider);
+  const { partnerId, walletAddress } = dayfiConfig;
+
+  const { generateDayFiContainer } = require("./helpers/generalHelpers").default;
+  const dayfiContainer = document.getElementById("dayfi-container");
+  const dayfiIframeWrapper = generateDayFiContainer({
+    url: `${iframeBaseUrl}/transfer?partnerId=${partnerId}&walletAddress=${walletAddress}`,
+    height: "70vh",
+    width: "90vw",
+  });
+
+  const chainDetails = await getChainDetails();
+
+  exeParams = { tokenDetails, chainDetails, web3Provider, provider };
+  dayfiContainer.appendChild(dayfiIframeWrapper);
+};
+
+const getCurrentUserVaultAddress = ({ userAddress = "" }) => {
+  //make API call to DayFi's server to get vault address
+  return "0x68d68DA8A7B994F624fed7b387781880283108Cc";
+};
+
+const renderLoanBook = ({ containerId = "" }) => {
+  const screenContainer = document.getElementById(containerId);
+  const url = `${iframeBaseUrl}/loanbook/${type}?partnerId=${partnerId}&walletAddress=${walletAddress}`;
+
+  const containerIframe = document.createElement("iframe");
+  containerIframe.src = url;
+  containerIframe.style.width = "100%";
+  containerIframe.style.height = "100%";
+
+  screenContainer.appendChild(containerIframe);
+};
+
+module.exports = {
+  initDayFiSdk,
+  openBNPLApproval,
+  openBNPLCheckout,
+  openTransferNft,
+  getCurrentUserVaultAddress,
+  renderLoanBook,
+};

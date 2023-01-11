@@ -2,7 +2,7 @@
   "_format": "hh-sol-artifact-1",
   "contractName": "PayLaterLoanCore",
   "sourceName": "contracts/PayLaterLoanCore.sol",
-  "defaultAddress": "0x2AE8F585875651A9eE783dAD9dcA2860cfE39108",
+  "defaultAddress": "0x788ec6eE255bC1b6dCAC480CFD53c5c853db6872",
   "abi": [
     {
       "inputs": [

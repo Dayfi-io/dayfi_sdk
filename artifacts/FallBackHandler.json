@@ -2,7 +2,7 @@
   "_format": "hh-sol-artifact-1",
   "contractName": "CompatibilityFallbackHandler",
   "sourceName": "contracts/handler/CompatibilityFallbackHandler.sol",
-  "defaultAddress": "0x8e2D749c29447643C5ef0db9a13F2EEbD40B452C",
+  "defaultAddress": "0xa761947daB45Fccb97ed756F3C7187a693F364B1",
   "abi": [
     {
       "inputs": [],

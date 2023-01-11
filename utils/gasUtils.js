@@ -2,7 +2,6 @@ const Web3 = require("web3");
 const { fromWei, toWei } = require("web3-utils");
 const axios = require("axios");
 const { List } = require("immutable");
-const { ethers } = require("ethers");
 const { BigNumber } = require("bignumber.js");
 const semverSatisfies = require("semver/functions/satisfies");
 const { postSafeGasEstimation, Operation, FEATURES } = require("@gnosis.pm/safe-react-gateway-sdk");
@@ -1150,21 +1149,26 @@ const getExecutionTransaction = ({
   to,
   valueInWei,
   tokenId,
+  tokenType,
 }) => {
   try {
-    return safeInstance.methods.execTransaction(
+    const execTransactionData = {
       to,
-      valueInWei,
-      data,
+      value: valueInWei,
       operation,
       safeTxGas,
       baseGas,
       gasPrice,
       gasToken,
       refundReceiver,
-      sigs,
+    };
+
+    const tokenData = {
       tokenId,
-    );
+      tokenType,
+    };
+
+    return safeInstance.methods.execTransaction(data, sigs, tokenData, execTransactionData);
   } catch (err) {
     console.error(`Error while creating transaction: ${err}`);
 

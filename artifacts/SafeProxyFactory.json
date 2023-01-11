@@ -2,7 +2,7 @@
   "_format": "hh-sol-artifact-1",
   "contractName": "GnosisSafeProxyFactory",
   "sourceName": "contracts/proxies/GnosisSafeProxyFactory.sol",
-  "defaultAddress": "0xBF1498F16Df53131BD95324338Fb754B38037EE5",
+  "defaultAddress": "0xfAa0AD7089061e7AD02e70cde952000813613Ec8",
   "abi": [
     {
       "anonymous": false,
