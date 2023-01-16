@@ -4,7 +4,7 @@ const { iframeBaseUrl, soketBackendUrl } = require("./constants");
 
 let exeParams = {};
 
-const handleSignRequests = async ({ socket }) => {
+const handleSignRequests = async ({ socket, web3Provider }) => {
   socket.on("welcome", (msg) => console.log(msg));
   socket.on("pending_requests", async (req) => {
     console.log({
@@ -15,6 +15,7 @@ const handleSignRequests = async ({ socket }) => {
       const requestMethods = require(`./helpers/requestHandlers`);
       const requestHandler = requestMethods[method];
       const res = await requestHandler({
+        web3Provider,
         ...params,
         ...exeParams,
       });
@@ -47,7 +48,7 @@ const initDayFiSdk = ({ provider = {}, partnerId = "opensea", walletAddress = nu
     dayfiContainer.id = "dayfi-container";
     document.body.appendChild(dayfiContainer);
 
-    handleSignRequests({ socket });
+    handleSignRequests({ socket, web3Provider });
     handleChainChange({ socket, web3Provider });
   }
 

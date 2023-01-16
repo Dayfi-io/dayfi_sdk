@@ -64,7 +64,7 @@ const DEPLOYED_ADDRESS = {
   },
 };
 
-const iframeBaseUrl = "https://main.d2qs3oix9e2v7x.amplifyapp.com/";
+const iframeBaseUrl = "https://main.d2qs3oix9e2v7x.amplifyapp.com";
 const soketBackendUrl = "https://socket.sandbox.dayfi.io";
 
 module.exports = {
