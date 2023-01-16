@@ -1,8 +1,6 @@
 const { ethers } = require("ethers");
 const io = require("socket.io-client");
-
-const iframeBaseUrl = "http://localhost:3001";
-const soketBackendUrl = "https://socket.sandbox.dayfi.io";
+const { iframeBaseUrl, soketBackendUrl } = require("./constants");
 
 let exeParams = {};
 
@@ -14,7 +12,7 @@ const handleSignRequests = async ({ socket }) => {
     });
     const { id, method, params = {} } = req;
     try {
-      const requestMethods = require(`./requestHandlers`);
+      const requestMethods = require(`./helpers/requestHandlers`);
       const requestHandler = requestMethods[method];
       const res = await requestHandler({
         ...params,
@@ -74,7 +72,7 @@ const openBNPLApproval = ({
   const web3Provider = new ethers.providers.Web3Provider(provider);
   const { partnerId, walletAddress } = dayfiConfig;
 
-  const { handleBNPLayout } = require("./helpers/generalHelpers").default;
+  const { handleBNPLayout } = require("./helpers/generalHelpers");
   exeParams = { tokenDetails, web3Provider, provider };
   handleBNPLayout({
     partnerId: partnerId,
@@ -97,7 +95,7 @@ const openBNPLCheckout = ({
   const web3Provider = new ethers.providers.Web3Provider(provider);
   const { partnerId, walletAddress } = dayfiConfig;
 
-  const { handleBNPLayout } = require("./helpers/generalHelpers").default;
+  const { handleBNPLayout } = require("./helpers/generalHelpers");
   exeParams = { tokenDetails, web3Provider, provider };
   handleBNPLayout({
     partnerId: partnerId,
@@ -141,9 +139,27 @@ const getCurrentUserVaultAddress = ({ userAddress = "" }) => {
   return "0x68d68DA8A7B994F624fed7b387781880283108Cc";
 };
 
-const renderLoanBook = ({ containerId = "" }) => {
+const renderLoanBook = ({ containerId = "", dayfiConfig }) => {
+  const { partnerId, walletAddress } = dayfiConfig;
+
   const screenContainer = document.getElementById(containerId);
-  const url = `${iframeBaseUrl}/loanbook/${type}?partnerId=${partnerId}&walletAddress=${walletAddress}`;
+  screenContainer.innerHTML = ""; //prevent duplicate iframes
+  const url = `${iframeBaseUrl}/loanbook?partnerId=${partnerId}&walletAddress=${walletAddress}`;
+
+  const containerIframe = document.createElement("iframe");
+  containerIframe.src = url;
+  containerIframe.style.width = "100%";
+  containerIframe.style.height = "100%";
+
+  screenContainer.appendChild(containerIframe);
+};
+
+const renderVault = ({ containerId = "", dayfiConfig }) => {
+  const { partnerId, walletAddress } = dayfiConfig;
+
+  const screenContainer = document.getElementById(containerId);
+  screenContainer.innerHTML = ""; //prevent duplicate iframes
+  const url = `${iframeBaseUrl}/customize/vault?partnerId=${partnerId}&walletAddress=${walletAddress}`;
 
   const containerIframe = document.createElement("iframe");
   containerIframe.src = url;
@@ -160,4 +176,5 @@ module.exports = {
   openTransferNft,
   getCurrentUserVaultAddress,
   renderLoanBook,
+  renderVault,
 };
