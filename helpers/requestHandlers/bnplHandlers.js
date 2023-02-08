@@ -7,13 +7,11 @@ const PayLaterLoanCore = require("../../artifacts/PayLaterLoanCore.json");
 const OriginationManager = require("../../artifacts/OriginationManager.json");
 const PaylaterRepaymentController = require("../../artifacts/PayLaterRepaymentController.json");
 
-const getApprovalForPayLaterTransfer = async ({ tokenDetails, interest, maxDuration, chain, web3Provider }) => {
+const getApprovalForPayLaterTransfer = async ({ tokenDetails, chain, web3Provider }) => {
   const { DEPLOYED_ADDRESS } = require("../../constants");
 
   console.log({
     tokenDetails,
-    interest,
-    maxDuration,
     address: DEPLOYED_ADDRESS[chain].OriginationManager,
   });
   const signer = web3Provider.getSigner();
