@@ -66,6 +66,7 @@ const DEPLOYED_ADDRESS = {
 
 const iframeBaseUrl = "https://main.d2qs3oix9e2v7x.amplifyapp.com";
 const soketBackendUrl = "https://socket.sandbox.dayfi.io";
+const backendUrl = "https://backend.sandbox.dayfi.io";
 
 module.exports = {
   CHAIN_DETAILS,
@@ -76,4 +77,5 @@ module.exports = {
   DEPLOYED_ADDRESS,
   iframeBaseUrl,
   soketBackendUrl,
+  backendUrl
 };

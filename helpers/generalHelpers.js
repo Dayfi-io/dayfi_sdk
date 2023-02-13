@@ -1,6 +1,8 @@
 const { getChainsConfig } = require("@gnosis.pm/safe-react-gateway-sdk");
+const { default: axios } = require("axios");
+const io = require("socket.io-client");
 
-const { iframeBaseUrl } = require("../constants");
+const { iframeBaseUrl, soketBackendUrl, backendUrl } = require("../constants");
 
 const generateDayFiContainer = ({ url, height = "90vh", width = "90vw" }) => {
   const dayfiIframeWrapper = document.createElement("div");
@@ -29,7 +31,22 @@ const generateDayFiContainer = ({ url, height = "90vh", width = "90vw" }) => {
   return dayfiIframeWrapper;
 };
 
-const handleBNPLayout = ({ type, partnerId, walletAddress }) => {
+const handleBNPLayout = ({ type, partnerId, walletAddress, tokenDetails }) => {
+  const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
+  
+  socket.on("pending_requests", async (request) => {
+    const { id, method, params = {} } = request;
+    if(method === "getTokenDetailsForListingNFT") {
+      const result = await axios.get(`${backendUrl}/general/getNFTMetadataIndividual/${tokenDetails.token_id}/${token_address}`);
+      if(result) {
+        socket.emit("request_fullfilled", {
+          id,
+          result: result.data.NFTMetaData,
+        });
+      }
+    }
+  });
+
   const dayfiContainer = document.getElementById("dayfi-container");
   const dayfiIframeWrapper = generateDayFiContainer({
     url: `${iframeBaseUrl}/${type}/lender?partnerId=${partnerId}&walletAddress=${walletAddress}`,
