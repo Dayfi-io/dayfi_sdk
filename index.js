@@ -14,17 +14,20 @@ const handleSignRequests = async ({ socket, web3Provider }) => {
     try {
       const requestMethods = require(`./helpers/requestHandlers`);
       const requestHandler = requestMethods[method];
-      const res = await requestHandler({
-        web3Provider,
-        ...params,
-        ...exeParams,
-      });
-      if (res) {
-        socket.emit("request_fullfilled", {
-          id,
-          result: res,
+      if(requestHandler) {
+        const res = await requestHandler({
+          web3Provider,
+          ...params,
+          ...exeParams,
         });
+        if (res) {
+          socket.emit("request_fullfilled", {
+            id,
+            result: res,
+          });
+        }
       }
+
     } catch (error) {
       console.log(error);
     }
