@@ -32,7 +32,7 @@ const generateDayFiContainer = ({ url, height = "90vh", width = "90vw" }) => {
 const handleBNPLayout = ({ type, partnerId, walletAddress }) => {
   const dayfiContainer = document.getElementById("dayfi-container");
   const dayfiIframeWrapper = generateDayFiContainer({
-    url: `${iframeBaseUrl}/checkout/lender?partnerId=${partnerId}&walletAddress=${walletAddress}`,
+    url: `${iframeBaseUrl}/${type}/lender?partnerId=${partnerId}&walletAddress=${walletAddress}`,
     height: "70vh",
     width: "90vw",
   });

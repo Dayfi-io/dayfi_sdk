@@ -79,7 +79,7 @@ const openBNPLApproval = ({
     partnerId: partnerId,
     walletAddress: walletAddress,
     tokenDetails,
-    type: "approval",
+    type: "listing",
   });
 };
 
