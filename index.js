@@ -14,7 +14,7 @@ const handleSignRequests = async ({ socket, web3Provider }) => {
     try {
       const requestMethods = require(`./helpers/requestHandlers`);
       const requestHandler = requestMethods[method];
-      console.log("requesthandler", requestHandler)
+
       if(requestHandler) {
         const res = await requestHandler({
           web3Provider,
