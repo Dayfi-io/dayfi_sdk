@@ -1,6 +1,6 @@
 {
   "name": "dayfi_sdk",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.1-alpha.0",
   "description": "Dayfi SDK allows business/dApps to enable buying NFTs on affordable payment options, rent & loan providing users with 100% utility.",
   "main": "index.js",
   "repository": {
@@ -16,12 +16,14 @@
     "lint-fix": "eslint *.js --fix",
     "postinstall": "husky install",
     "prepack": "pinst --disable",
-    "postpack": "pinst --enable"
+    "postpack": "pinst --enable",
+    "test": "jest"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
     "eslint": "^8.28.0",
     "husky": "^8.0.2",
+    "jest": "^29.4.3",
     "pinst": "^3.0.0"
   },
   "dependencies": {
@@ -33,7 +35,8 @@
     "immutable": "^4.1.0",
     "semver": "^7.3.8",
     "socket.io-client": "^4.5.3",
-    "web3": "^1.8.1",
+    "web3": "^1.8.2",
+    "web3-eth": "^1.8.2",
     "web3-utils": "^1.8.1"
   },
   "author": "Engineers@Dayfi",

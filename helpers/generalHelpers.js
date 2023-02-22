@@ -1,8 +1,8 @@
-const { getChainsConfig } = require("@gnosis.pm/safe-react-gateway-sdk");
 const { default: axios } = require("axios");
 const io = require("socket.io-client");
-
-const { iframeBaseUrl, soketBackendUrl, backendUrl } = require("../constants");
+const { iframeBaseUrl, soketBackendUrl, backendUrl, supportedCurrencies } = require("../constants");
+const supportedChains = require('../utils/supportedChains.json');
+const { ethers } = require("ethers");
 
 const generateDayFiContainer = ({ url, height = "90vh", width = "90vw" }) => {
   const dayfiIframeWrapper = document.createElement("div");
@@ -65,14 +65,182 @@ const handleChainChange = async ({ socket, web3Provider }) => {
   });
 };
 
-const getChainDetails = async () => {
-  const { results } = await getChainsConfig("https://safe-client.gnosis.io");
-  return results;
+const getSupportedChains = async () => {
+  const chains = supportedChains.filter((chain) => chain.supported === true);
+
+  return chains;
 };
+
+const checkIsSupportedChainByChainId = async ({rawChainId}) => {
+  try {
+
+    if(!rawChainId) {
+      throw new Error("Please provide valid values for chainId")
+    } else {
+      // const chainId = rawChainId.split('0x')[1];
+      let chainId;
+      const rawChainDetails = rawChainId.split('0x');
+      if(rawChainDetails.length > 1 && rawChainDetails.length <3) {
+        chainId = rawChainId.split('0x')[1];
+
+      } else if(rawChainDetails.length === 1) {
+        chainId = rawChainId.split('0x')[0];
+
+
+      }
+      const resultingChain = supportedChains.filter((chain) => chain.chainId === chainId && chain.supported === true);
+      if(!resultingChain.length > 0) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  } catch(error) {
+    throw new Error(error);
+  }
+}
+
+const checkIsSupportedChainByChainName = async ({chainName}) => {
+  try {
+    const Chains = await getSupportedChains();
+    const isChainSupported = Chains.filter((chain) => chain.chainName === chainName);
+    if(!(isChainSupported.length > 0)) {
+      throw new Error(`Chain ${chainName} not supported`);
+    } 
+
+    return true;
+    
+  } catch(error) {
+    throw new Error(error);
+  }
+}
+
+const GetNFTMetadata = async ({tokenDetails, chainName}) => {
+  try {
+    // tokendetails verification check goes here
+    const isChainSupported = await checkIsSupportedChainByChainName(chainName);
+    if(isChainSupported) {
+      const response = await axios.get(`${backendUrl}/general/getNFTMetadataIndividual/${tokenDetails.token_id}/${tokenDetails.token_address}/${chainName}`);
+      return response.data.NFTMetaData;
+    }
+  } catch(error) {
+    return false;
+  }
+};
+
+const validateLenderTerms = async ({terms}) => {
+    // Validate terms exists
+    if(!terms) {
+      throw new Error("Please provide valid terms");
+      
+    }
+
+    // Price should be greater than 0 check
+    if(!(parseFloat(terms.price) > 0.0)) {
+      throw new Error("Price should be greater than zero");
+    }
+
+    // Interest should not exceed 20% check
+    if(!(parseFloat(terms.interest) >= 0 && parseFloat(terms.interest) <= 20)) {
+      throw new Error("Interest should be less than 20%");
+    }
+
+    // Supported chain check
+    const Chains = await SupportedCurrencies();
+    const isChainSupported = Chains.filter((chain) => chain.chainName === terms.chainName);
+    if(!(isChainSupported.length > 0)) {
+      throw new Error(`Chain ${terms.chainName} not supported`);
+    }
+
+    // Currency Support check
+    if(!(Object.keys(isChainSupported[0].currency).includes(terms.currency))) {
+      throw new Error(`Currency ${terms.currency} not supported on ${terms.chainName}`);
+    }
+
+    // Maximum installment 12 check
+    if(parseInt(terms.maxInstallment) > 12) {
+      throw new Error("Maximum Installments must be less than 12");
+    }
+
+    // Maximum 30 Days check
+    if(parseInt(terms.maxDuration) > 30 && terms.durationType === "Days") {
+      throw new Error("Maximum 30 Days allowed or choose month for longer duration");
+    }
+
+    // Maximum 12 months allowed
+    if(parseInt(terms.maxDuration) > 12 && terms.durationType === "Months") {
+      throw new Error("Maximum 12 Months allowed");
+    }
+
+    return true;
+};
+
+const SupportedCurrencies = async() => {
+  return supportedCurrencies;
+};
+
+const isPartnerExists = async(partnerId) => {
+  try {
+    if(!partnerId) {
+      return false;
+    }
+    const response = await axios.get(`${backendUrl}/partner/getPartnerByPartnerId/${partnerId}`);
+    return response.data.partner;
+  } catch(error) {
+    return false;
+  }
+};
+
+const validateNFT = async({
+  userWallet,
+  tokenDetails
+}) => {
+
+    const response = await axios.get(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${tokenDetails.token_address}&apikey=YFEE1QVDUKEAPVDU3IUUFH3UQKD35XIHKA`)
+
+    if(response.data.result === 'Invalid Address format') {
+        throw new Error('Invalid Contract address');
+    } else {
+        var isOwnerOffunctionExists = JSON.parse(response.data.result).find((object) => object.name === 'ownerOf');
+        if(!isOwnerOffunctionExists) {
+            throw new Error('Unable to verify NFT OwnerShip: Contract does not have ownerOf property');
+        } else {
+            const ABI = JSON.parse(response.data.result);
+
+            const NFTContract = new ethers.Contract(tokenDetails.token_address, ABI, userWallet);   
+            
+            const currentOwnerAddress = await NFTContract.ownerOf(tokenDetails.token_id);
+            
+            if(currentOwnerAddress === userWallet.address) {
+              return true;
+            } else {
+              throw new Error("Owner mismatch: provided wallet does not hold the NFT");
+            }
+        }
+    } 
+}
+
+const getChainIdByChainName = ({ chainName }) => {
+  const chains = supportedChains.filter((chain) => chain.chainName === chainName);
+  if(chains.length > 0) {
+    return parseInt(chains[0].chainId);
+  } else {
+    throw new Error("Chain not found: " + chainName);
+  }
+}
+
 
 module.exports = {
   generateDayFiContainer,
   handleBNPLayout,
   handleChainChange,
-  getChainDetails,
+  getSupportedChains,
+  checkIsSupportedChainByChainId,
+  GetNFTMetadata,
+  validateLenderTerms,
+  SupportedCurrencies,
+  checkIsSupportedChainByChainName,
+  isPartnerExists,
+  validateNFT,
+  getChainIdByChainName
 };

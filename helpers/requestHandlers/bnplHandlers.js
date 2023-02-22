@@ -7,14 +7,9 @@ const PayLaterLoanCore = require("../../artifacts/PayLaterLoanCore.json");
 const OriginationManager = require("../../artifacts/OriginationManager.json");
 const PaylaterRepaymentController = require("../../artifacts/PayLaterRepaymentController.json");
 
-const getApprovalForPayLaterTransfer = async ({ tokenDetails, chain, web3Provider }) => {
+const getApprovalForPayLaterTransfer = async ({ tokenDetails, chain, signer }) => {
   const { DEPLOYED_ADDRESS } = require("../../constants");
 
-  console.log({
-    tokenDetails,
-    address: DEPLOYED_ADDRESS[chain].OriginationManager,
-  });
-  const signer = web3Provider.getSigner();
   let tokenContractInstance = null;
   if (tokenDetails.contract_type === "ERC721") {
     tokenContractInstance = new ethers.Contract(tokenDetails.token_address, ERC721.abi, signer);

@@ -68,6 +68,43 @@ const iframeBaseUrl = "https://main.d2qs3oix9e2v7x.amplifyapp.com";
 const soketBackendUrl = "https://socket.sandbox.dayfi.io";
 const backendUrl = "https://backend.sandbox.dayfi.io";
 
+const supportedCurrencies = [
+  {
+    // Ethereum mainnet
+    "chainId": "0x1",
+    "chainName": "Ethereum Mainnet",
+    "currency": {
+      "USDT": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "wETH": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "DAI": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "ETH": "0x0000000000000000000000000000000000000000"
+    }
+  },
+  {
+    "chainId": "0x5",
+    "chainName": "Ethereum Goreli Testnet",
+    "currency": {
+      "ETHGoreli": "0x0000000000000000000000000000000000000000"
+    }
+  },
+  {
+    "chainId": "0x137",
+    "chainName": "Polygon Mainnet",
+    "currency": {
+      "MATIC": "0x0000000000000000000000000000000000000000"
+    }
+  },
+  {
+    "chainId": "0x80001",
+    "chainName": "Polygon Mumbai Testnet",
+    "currency": {
+      "MATIC:mumbai": "0x0000000000000000000000000000000000000000"
+    }
+  }
+];
+
+const currencyKeys = ["MATIC", "MATIC:mumbai", "ETHGoreli", "USDT", "wETH", "DAI", "ETH"]
+
 module.exports = {
   CHAIN_DETAILS,
   ZERO_ADDRESS,
@@ -77,5 +114,7 @@ module.exports = {
   DEPLOYED_ADDRESS,
   iframeBaseUrl,
   soketBackendUrl,
-  backendUrl
+  backendUrl,
+  supportedCurrencies,
+  currencyKeys
 };

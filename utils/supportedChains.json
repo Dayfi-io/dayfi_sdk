@@ -1,0 +1,657 @@
+[
+    {
+        "transactionService": "https://safe-transaction-mainnet.safe.global",
+        "chainId": "1",
+        "supported": true,
+        "chainName": "Ethereum Mainnet",
+        "shortName": "eth",
+        "l2": false,
+        "description": "The main Ethereum network",
+        "rpcUri": {
+            "authentication": "API_KEY_PATH",
+            "value": "https://mainnet.infura.io/v3/"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "API_KEY_PATH",
+            "value": "https://mainnet.infura.io/v3/"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://cloudflare-eth.com"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://etherscan.io/address/{{address}}",
+            "txHash": "https://etherscan.io/tx/{{txHash}}",
+            "api": "https://api.etherscan.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "Ether",
+            "symbol": "ETH",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/1/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#001428",
+            "backgroundColor": "#DDDDDD"
+        },
+        "ensRegistryAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+        "gasPrice": [
+            {
+                "type": "ORACLE",
+                "uri": "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=JNFAU892RF9TJWBU3EV7DJCPIWZY8KEMY1",
+                "gasParameter": "FastGasPrice",
+                "gweiFactor": "1000000000.000000000"
+            }
+        ],
+        "disabledWallets": [
+            "fortmatic",
+            "portis",
+            "torus"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "DOMAIN_LOOKUP",
+            "EIP1559",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL",
+            "SPENDING_LIMIT",
+            "TX_SIMULATION"
+        ]
+    },
+    {
+        "transactionService": "https://safe-transaction-gnosis-chain.safe.global",
+        "chainId": "100",
+        "supported": false,
+        "chainName": "Gnosis Chain",
+        "shortName": "gno",
+        "l2": true,
+        "description": "",
+        "rpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://rpc.gnosis.gateway.fm"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://rpc.gnosis.gateway.fm"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://rpc.gnosis.gateway.fm"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://blockscout.com/xdai/mainnet/address/{{address}}/transactions",
+            "txHash": "https://blockscout.com/xdai/mainnet/tx/{{txHash}}/",
+            "api": "https://blockscout.com/poa/xdai/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "xDai",
+            "symbol": "XDAI",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/100/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#ffffff",
+            "backgroundColor": "#48A9A6"
+        },
+        "gasPrice": [
+            {
+                "type": "FIXED",
+                "weiValue": "4000000000"
+            }
+        ],
+        "disabledWallets": [
+            "fortmatic",
+            "keystone",
+            "ledger",
+            "opera",
+            "operaTouch",
+            "portis",
+            "tally",
+            "torus",
+            "trust"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "EIP1559",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL",
+            "SPENDING_LIMIT",
+            "TX_SIMULATION"
+        ]
+    },
+    {
+        "transactionService": "https://safe-transaction-polygon.safe.global",
+        "chainId": "137",
+        "supported": true,
+        "chainName": "Polygon Mainnet",
+        "shortName": "matic",
+        "l2": true,
+        "description": "L2 chain (MATIC)",
+        "rpcUri": {
+            "authentication": "API_KEY_PATH",
+            "value": "https://polygon-mainnet.infura.io/v3/"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "API_KEY_PATH",
+            "value": "https://polygon-mainnet.infura.io/v3/"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://polygon-rpc.com"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://polygonscan.com/address/{{address}}",
+            "txHash": "https://polygonscan.com/tx/{{txHash}}",
+            "api": "https://api.polygonscan.com/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "Matic",
+            "symbol": "MATIC",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/137/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#ffffff",
+            "backgroundColor": "#8248E5"
+        },
+        "gasPrice": [
+            {
+                "type": "ORACLE",
+                "uri": "https://gasstation-mainnet.matic.network/",
+                "gasParameter": "standard",
+                "gweiFactor": "1000000000.000000000"
+            }
+        ],
+        "disabledWallets": [
+            "fortmatic",
+            "keystone",
+            "opera",
+            "operaTouch",
+            "portis",
+            "torus",
+            "trezor",
+            "trust"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL",
+            "SPENDING_LIMIT",
+            "TX_SIMULATION"
+        ]
+    },
+    {
+        "transactionService": "https://safe-transaction-bsc.safe.global",
+        "chainId": "56",
+        "supported": false,
+        "chainName": "BNB Smart Chain",
+        "shortName": "bnb",
+        "l2": true,
+        "description": "",
+        "rpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://bsc-dataseed.binance.org/"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://bsc-dataseed.binance.org/"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://bsc-dataseed.binance.org/"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://bscscan.com/address/{{address}}",
+            "txHash": "https://bscscan.com/tx/{{txHash}}",
+            "api": "https://api.bscscan.com/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "BNB",
+            "symbol": "BNB",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/56/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#001428",
+            "backgroundColor": "#F0B90B"
+        },
+        "gasPrice": [],
+        "disabledWallets": [
+            "fortmatic",
+            "keystone",
+            "opera",
+            "operaTouch",
+            "portis",
+            "tally",
+            "torus",
+            "trust"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL",
+            "SPENDING_LIMIT",
+            "TX_SIMULATION"
+        ]
+    },
+    {
+        "transactionService": "https://safe-transaction-ewc.safe.global",
+        "chainId": "false",
+        "supported": false,
+        "chainName": "Energy Web Chain",
+        "shortName": "ewt",
+        "l2": true,
+        "description": "",
+        "rpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://rpc.energyweb.org"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://rpc.energyweb.org"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://rpc.energyweb.org"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://explorer.energyweb.org/address/{{address}}/transactions",
+            "txHash": "https://explorer.energyweb.org/tx/{{txHash}}/internal-transactions",
+            "api": "https://explorer.energyweb.org/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "Energy Web Token",
+            "symbol": "EWT",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/246/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#ffffff",
+            "backgroundColor": "#A566FF"
+        },
+        "gasPrice": [
+            {
+                "type": "FIXED",
+                "weiValue": "1000000"
+            }
+        ],
+        "disabledWallets": [
+            "coinbase",
+            "fortmatic",
+            "keystone",
+            "ledger",
+            "opera",
+            "operaTouch",
+            "portis",
+            "tally",
+            "torus",
+            "trezor",
+            "trust"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL",
+            "SPENDING_LIMIT"
+        ]
+    },
+    {
+        "transactionService": "https://safe-transaction-arbitrum.safe.global",
+        "chainId": "42161",
+        "supported": false,
+        "chainName": "Arbitrum",
+        "shortName": "arb1",
+        "l2": true,
+        "description": "",
+        "rpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://arb1.arbitrum.io/rpc"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://arb1.arbitrum.io/rpc"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://arb1.arbitrum.io/rpc"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://arbiscan.io/address/{{address}}",
+            "txHash": "https://arbiscan.io/tx/{{txHash}}",
+            "api": "https://api.arbiscan.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "AETH",
+            "symbol": "AETH",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/42161/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#ffffff",
+            "backgroundColor": "#28A0F0"
+        },
+        "gasPrice": [],
+        "disabledWallets": [
+            "fortmatic",
+            "keystone",
+            "ledger",
+            "opera",
+            "operaTouch",
+            "portis",
+            "torus",
+            "trust"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL",
+            "TX_SIMULATION"
+        ]
+    },
+    {
+        "transactionService": "https://safe-transaction-aurora.safe.global",
+        "chainId": "1313161554",
+        "supported": false,
+        "chainName": "Aurora",
+        "shortName": "aurora",
+        "l2": true,
+        "description": "",
+        "rpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://mainnet.aurora.dev"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://mainnet.aurora.dev"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://mainnet.aurora.dev"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://aurorascan.dev/address/{{address}}/transactions",
+            "txHash": "https://aurorascan.dev/tx/{{txHash}}/",
+            "api": "https://aurorascan.dev/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "Ether",
+            "symbol": "ETH",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/1313161554/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#ffffff",
+            "backgroundColor": "#78D64B"
+        },
+        "gasPrice": [],
+        "disabledWallets": [
+            "coinbase",
+            "fortmatic",
+            "keystone",
+            "ledger",
+            "opera",
+            "operaTouch",
+            "portis",
+            "tally",
+            "torus",
+            "trezor",
+            "trust"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL"
+        ]
+    },
+    {
+        "transactionService": "https://safe-transaction-avalanche.safe.global",
+        "chainId": "43114",
+        "supported": false,
+        "chainName": "Avalanche",
+        "shortName": "avax",
+        "l2": true,
+        "description": "",
+        "rpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://api.avax.network/ext/bc/C/rpc"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://api.avax.network/ext/bc/C/rpc"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://api.avax.network/ext/bc/C/rpc"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://snowtrace.io/address/{{address}}",
+            "txHash": "https://snowtrace.io/tx/{{txHash}}",
+            "api": "https://api.snowtrace.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "Avalanche",
+            "symbol": "AVAX",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/43114/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#ffffff",
+            "backgroundColor": "#000000"
+        },
+        "gasPrice": [],
+        "disabledWallets": [
+            "fortmatic",
+            "keystone",
+            "ledger",
+            "opera",
+            "operaTouch",
+            "portis",
+            "tally",
+            "torus",
+            "trust"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "EIP1559",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL",
+            "SPENDING_LIMIT",
+            "TX_SIMULATION"
+        ]
+    },
+    {
+        "transactionService": "https://safe-transaction-optimism.safe.global",
+        "chainId": "10",
+        "supported": false,
+        "chainName": "Optimism",
+        "shortName": "oeth",
+        "l2": true,
+        "description": "",
+        "rpcUri": {
+            "authentication": "API_KEY_PATH",
+            "value": "https://optimism-mainnet.infura.io/v3/"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "API_KEY_PATH",
+            "value": "https://optimism-mainnet.infura.io/v3/"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://mainnet.optimism.io/"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://optimistic.etherscan.io/address/{{address}}",
+            "txHash": "https://optimistic.etherscan.io/tx/{{txHash}}",
+            "api": "https://api-optimistic.etherscan.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "Ether",
+            "symbol": "OETH",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/10/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#ffffff",
+            "backgroundColor": "#F01A37"
+        },
+        "gasPrice": [],
+        "disabledWallets": [
+            "fortmatic",
+            "keystone",
+            "ledger",
+            "opera",
+            "operaTouch",
+            "portis",
+            "torus",
+            "trust"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL",
+            "TX_SIMULATION"
+        ]
+    },
+    {
+        "transactionService": "https://safe-transaction-goerli.safe.global/",
+        "chainId": "5",
+        "supported": true,
+        "chainName": "Ethereum Goreli Testnet",
+        "shortName": "gor",
+        "l2": true,
+        "description": "Ethereum Testnet Görli",
+        "rpcUri": {
+            "authentication": "API_KEY_PATH",
+            "value": "https://goerli.infura.io/v3/"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "API_KEY_PATH",
+            "value": "https://goerli.infura.io/v3/"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://rpc.ankr.com/eth_goerli"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://goerli.etherscan.io/address/{{address}}",
+            "txHash": "https://goerli.etherscan.io/tx/{{txHash}}",
+            "api": "https://api-goerli.etherscan.io/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "Görli Ether",
+            "symbol": "GOR",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/5/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#ffffff",
+            "backgroundColor": "#4D99EB"
+        },
+        "ensRegistryAddress": "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+        "gasPrice": [
+            {
+                "type": "FIXED",
+                "weiValue": "100000000000"
+            },
+            {
+                "type": "FIXED",
+                "weiValue": "24000000000"
+            }
+        ],
+        "disabledWallets": [
+            "coinbase",
+            "fortmatic",
+            "portis",
+            "tally",
+            "torus",
+            "trust"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "DOMAIN_LOOKUP",
+            "EIP1559",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL",
+            "SPENDING_LIMIT",
+            "TX_SIMULATION"
+        ]
+    },
+    {
+        "transactionService": "https://safe-transaction-volta.safe.global",
+        "chainId": "73799",
+        "supported": false,
+        "chainName": "Volta",
+        "shortName": "vt",
+        "l2": true,
+        "description": "",
+        "rpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://volta-rpc.energyweb.org"
+        },
+        "safeAppsRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://volta-rpc.energyweb.org"
+        },
+        "publicRpcUri": {
+            "authentication": "NO_AUTHENTICATION",
+            "value": "https://volta-rpc.energyweb.org"
+        },
+        "blockExplorerUriTemplate": {
+            "address": "https://volta-explorer.energyweb.org/address/{{address}}/transactions",
+            "txHash": "https://volta-explorer.energyweb.org/tx/{{txHash}}/internal-transactions",
+            "api": "https://volta-explorer.energyweb.org/api?module={{module}}&action={{action}}&address={{address}}&apiKey={{apiKey}}"
+        },
+        "nativeCurrency": {
+            "name": "Volta Token",
+            "symbol": "VT",
+            "decimals": 18,
+            "logoUri": "https://safe-transaction-assets.safe.global/chains/73799/currency_logo.png"
+        },
+        "theme": {
+            "textColor": "#ffffff",
+            "backgroundColor": "#514989"
+        },
+        "gasPrice": [
+            {
+                "type": "FIXED",
+                "weiValue": "1000000"
+            }
+        ],
+        "disabledWallets": [
+            "coinbase",
+            "fortmatic",
+            "keystone",
+            "ledger",
+            "opera",
+            "operaTouch",
+            "portis",
+            "tally",
+            "torus",
+            "trezor",
+            "trust"
+        ],
+        "features": [
+            "CONTRACT_INTERACTION",
+            "DOMAIN_LOOKUP",
+            "ERC721",
+            "SAFE_APPS",
+            "SAFE_TX_GAS_OPTIONAL",
+            "SPENDING_LIMIT"
+        ]
+    }, {
+        "chainId": "80001",
+        "supported": true,
+        "chainName": "Polygon Mumbai Testnet",
+        "shortName": "MATIC Mumbai"
+    }
+]
