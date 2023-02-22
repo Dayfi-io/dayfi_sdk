@@ -139,7 +139,7 @@ const listNFTForPayLater = async({
           chain: chainId,
           signer: userWallet
         });
-
+        console.log(response);
         const listingResponse = await axios.post(`${backendUrl}/paylater/createPaylater`, {
           chain: chainId,
           price: terms.price,
