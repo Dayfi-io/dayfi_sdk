@@ -210,8 +210,7 @@ const validateNFT = async({
             const NFTContract = new ethers.Contract(tokenDetails.token_address, ABI, userWallet);   
             
             const currentOwnerAddress = await NFTContract.ownerOf(tokenDetails.token_id);
-            console.log(currentOwnerAddress, userWallet.address, userWallet)
-            if(currentOwnerAddress === userWallet.address) {
+            if(currentOwnerAddress === userWallet.getAddress()) {
               return true;
             } else {
               throw new Error("Owner mismatch: provided wallet does not hold the NFT");
