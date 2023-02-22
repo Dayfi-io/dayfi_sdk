@@ -210,7 +210,7 @@ const validateNFT = async({
             const NFTContract = new ethers.Contract(tokenDetails.token_address, ABI, userWallet);   
             
             const currentOwnerAddress = await NFTContract.ownerOf(tokenDetails.token_id);
-            console.log(currentOwnerAddress, userWallet.address)
+            console.log(currentOwnerAddress, userWallet.address, userWallet)
             if(currentOwnerAddress === userWallet.address) {
               return true;
             } else {
