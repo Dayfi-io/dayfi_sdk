@@ -113,7 +113,7 @@ const listNFTForPayLater = async({
         if(!userWallet.address === walletAddress) {
           throw new Error("User wallet mismatch: " + walletAddress + " with initialised Wallet " + userWallet.address);
         }
-
+        console.log(userWallet)
         // Validate Partner
         const isPartnerExistsResponse = await isPartnerExists(partnerId);
         if(!isPartnerExistsResponse) {
