@@ -110,10 +110,10 @@ const listNFTForPayLater = async({
         } else {
           throw new Error("Please provie a valid web3JS provider or etherJS Signer")
         }
-        if(!userWallet.address === walletAddress) {
-          throw new Error("User wallet mismatch: " + walletAddress + " with initialised Wallet " + userWallet.address);
+        const userWalletAddressFromWallet = await userWallet.getAddress()
+        if(!userWalletAddressFromWallet === walletAddress) {
+          throw new Error("User wallet mismatch: " + walletAddress + " with initialised Wallet " + userWalletAddressFromWallet);
         }
-        console.log(userWallet)
         // Validate Partner
         const isPartnerExistsResponse = await isPartnerExists(partnerId);
         if(!isPartnerExistsResponse) {
@@ -129,7 +129,7 @@ const listNFTForPayLater = async({
         const chainId = await getChainIdByChainName({chainName: terms.chainName})
         
         // Validate is listing already exists
-        const isListedResponse = await axios.get(`${backendUrl}/paylater/checkIsNFTListed/${partnerId}/${chainId}/${tokenDetails.token_id}/${tokenDetails.token_address}/${userWallet.address}`);
+        const isListedResponse = await axios.get(`${backendUrl}/paylater/checkIsNFTListed/${partnerId}/${chainId}/${tokenDetails.token_id}/${tokenDetails.token_address}/${userWalletAddressFromWallet}`);
         if(!isListedResponse.data.message === "NFT not Listed") {
           throw new Error("NFT already listed");
         }
@@ -144,7 +144,7 @@ const listNFTForPayLater = async({
           chain: chainId,
           price: terms.price,
           currency: terms.currency,
-          lender: userWallet.address,
+          lender: userWalletAddressFromWallet,
           partner: partnerId,
           token_id: tokenDetails.token_id,
           token_address: tokenDetails.token_address,
