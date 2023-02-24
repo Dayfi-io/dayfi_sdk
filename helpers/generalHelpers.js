@@ -228,6 +228,24 @@ const getChainIdByChainName = ({ chainName }) => {
   }
 }
 
+const checkIsNFTListedForPayLater = async({
+  partnerId,
+  chainId,
+  token_id,
+  token_address,
+  walletAddress,
+}) => {
+  try {
+    const isListedResponse = await axios.get(`${backendUrl}/paylater/checkIsNFTListed/${partnerId}/${chainId}/${token_id}/${token_address}/${walletAddress}`);
+    if(!isListedResponse.data.message === "NFT not Listed") {
+      return isListedResponse.data.PaylaterRequest;
+    }
+    return false
+  } catch(error) {
+    console.error(error);
+    throw new Error(error.message)
+  }
+}
 
 module.exports = {
   generateDayFiContainer,
@@ -241,5 +259,6 @@ module.exports = {
   checkIsSupportedChainByChainName,
   isPartnerExists,
   validateNFT,
-  getChainIdByChainName
+  getChainIdByChainName,
+  checkIsNFTListedForPayLater
 };

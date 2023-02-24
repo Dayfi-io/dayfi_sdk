@@ -10,7 +10,8 @@ const {
   checkIsSupportedChainByChainName,
   isPartnerExists,
   validateNFT,
-  getChainIdByChainName
+  getChainIdByChainName,
+  checkIsNFTListedForPayLater
 } = require("./helpers/generalHelpers");
 const {
   getApprovalForPayLaterTransfer
@@ -129,9 +130,9 @@ const listNFTForPayLater = async({
         const chainId = await getChainIdByChainName({chainName: terms.chainName})
         
         // Validate is listing already exists
-        const isListedResponse = await axios.get(`${backendUrl}/paylater/checkIsNFTListed/${partnerId}/${chainId}/${tokenDetails.token_id}/${tokenDetails.token_address}/${userWalletAddressFromWallet}`);
-        if(!isListedResponse.data.message === "NFT not Listed") {
-          throw new Error("NFT already listed");
+        const isPayLaterExists = await checkIsNFTListedForPayLater({partnerId, chainId, token_id: tokenDetails.token_id, token_address: tokenDetails.token_address, walletAddress: userWalletAddressFromWallet})
+        if(isPayLaterExists) {
+          return isPayLaterExists;
         }
 
         const response = await getApprovalForPayLaterTransfer({
@@ -139,7 +140,6 @@ const listNFTForPayLater = async({
           chain: chainId,
           signer: userWallet
         });
-        console.log(response);
         const listingResponse = await axios.post(`${backendUrl}/paylater/createPaylater`, {
           chain: chainId,
           price: terms.price,
@@ -155,7 +155,6 @@ const listNFTForPayLater = async({
           maxDurationType: terms.durationType,
           approvalTransactionHash: response.transactionHash,
         })
-        console.log(response, listingResponse.data.Paylater);
         return listingResponse.data.Paylater;
       }
     } catch (error) {
@@ -172,5 +171,6 @@ module.exports = {
   getSupportedChains,
   validateLenderTerms,
   checkIsSupportedChainByChainId,
-  checkIsSupportedChainByChainName
+  checkIsSupportedChainByChainName,
+  checkIsNFTListedForPayLater
 };
