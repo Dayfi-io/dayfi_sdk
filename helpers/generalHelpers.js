@@ -237,10 +237,12 @@ const checkIsNFTListedForPayLater = async({
 }) => {
   try {
     const isListedResponse = await axios.get(`${backendUrl}/paylater/checkIsNFTListed/${partnerId}/${chainId}/${token_id}/${token_address}/${walletAddress}`);
-    if(!isListedResponse.data.message === "NFT not Listed") {
+    console.log(isListedResponse)
+    if(isListedResponse.data.message === "NFT not Listed") {
+      return false
+    } else if(isListedResponse.data.message === "NFT already Listed") {
       return isListedResponse.data.PaylaterRequest;
     }
-    return false
   } catch(error) {
     console.error(error);
     throw new Error(error.message)
