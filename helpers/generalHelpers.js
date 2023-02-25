@@ -222,10 +222,22 @@ const validateNFT = async({
 }
 
 const isOwnerOfNFT = async({
-  userWallet,
-  tokenDetails
+  tokenDetails,
+  web3JSProvider,
+  ethersSigner
 }) => {
   try{
+
+    let userWallet;
+
+    if(web3JSProvider) {
+      userWallet = (new ethers.providers.Web3Provider(web3JSProvider)).getSigner();
+    } else if(ethersSigner) {
+      userWallet = ethersSigner;
+    } else {
+      throw new Error("Please provie a valid web3JS provider or etherJS Signer")
+    }
+    
     const response = await axios.get(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${tokenDetails.token_address}&apikey=YFEE1QVDUKEAPVDU3IUUFH3UQKD35XIHKA`)
 
     if(response.data.result === 'Invalid Address format') {
