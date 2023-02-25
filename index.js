@@ -199,7 +199,7 @@ const mountPaylaterIFrame = async({
       }
       
       // Validate chain
-      const chainId = await getChainIdByChainName({chainName: terms.chainName})
+      const chainId = await getChainIdByChainName({chainName: chainName})
         
       // Validate is listing already exists
       const isPayLaterExists = await checkIsNFTListedForPayLater({partnerId, chainId, token_id: tokenDetails.token_id, token_address: tokenDetails.token_address, walletAddress: userWalletAddressFromWallet})
