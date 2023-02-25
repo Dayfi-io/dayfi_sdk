@@ -191,17 +191,12 @@ const mountPaylaterIFrame = async({
         throw new Error("Please provie a valid web3JS provider or etherJS Signer")
       }
       const userWalletAddressFromWallet = await userWallet.getAddress()
-      if(!userWalletAddressFromWallet === walletAddress) {
-        throw new Error("User wallet mismatch: " + walletAddress + " with initialised Wallet " + userWalletAddressFromWallet);
-      }
+      
       // Validate Partner
       const isPartnerExistsResponse = await isPartnerExists(partnerId);
       if(!isPartnerExistsResponse) {
         throw new Error("Partner does not exist: " + partnerId);
       }
-
-      // Validate NFT
-      await validateNFT({userWallet, tokenDetails})
       
       // Validate chain
       const chainId = await getChainIdByChainName({chainName: terms.chainName})
