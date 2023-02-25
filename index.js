@@ -11,7 +11,8 @@ const {
   isPartnerExists,
   validateNFT,
   getChainIdByChainName,
-  checkIsNFTListedForPayLater
+  checkIsNFTListedForPayLater,
+  isOwnerOfNFT
 } = require("./helpers/generalHelpers");
 const {
   getApprovalForPayLaterTransfer
@@ -236,5 +237,6 @@ module.exports = {
   checkIsSupportedChainByChainId,
   checkIsSupportedChainByChainName,
   checkIsNFTListedForPayLater,
-  mountPaylaterIFrame
+  mountPaylaterIFrame,
+  isOwnerOfNFT
 };
