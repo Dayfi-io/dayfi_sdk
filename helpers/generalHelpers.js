@@ -31,13 +31,13 @@ const generateDayFiContainer = ({ url, height = "90vh", width = "90vw" }) => {
   return dayfiIframeWrapper;
 };
 
-const handleBNPLayout = ({ type, partnerId, walletAddress, tokenDetails }) => {
+const handleBNPLayout = ({ type, partnerId, walletAddress, tokenDetails, chainName }) => {
   const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
   
   socket.on("pending_requests", async (request) => {
     const { id, method, params = {} } = request;
     if(method === "getTokenDetailsForListingNFT") {
-      const result = await axios.get(`${backendUrl}/general/getNFTMetadataIndividual/${tokenDetails.token_id}/${tokenDetails.token_address}`);
+      const result = await axios.get(`${backendUrl}/general/getNFTMetadataIndividual/${tokenDetails.token_id}/${tokenDetails.token_address}/${chainName}`);
       if(result) {
         socket.emit("request_fullfilled", {
           id,
@@ -49,7 +49,7 @@ const handleBNPLayout = ({ type, partnerId, walletAddress, tokenDetails }) => {
 
   const dayfiContainer = document.getElementById("dayfi-container");
   const dayfiIframeWrapper = generateDayFiContainer({
-    url: `${iframeBaseUrl}/${type}/lender?partnerId=${partnerId}&walletAddress=${walletAddress}`,
+    url: `${iframeBaseUrl}/${type}/borrower?partnerId=${partnerId}&walletAddress=${walletAddress}`,
     height: "70vh",
     width: "90vw",
   });
@@ -82,11 +82,8 @@ const checkIsSupportedChainByChainId = async ({rawChainId}) => {
       const rawChainDetails = rawChainId.split('0x');
       if(rawChainDetails.length > 1 && rawChainDetails.length <3) {
         chainId = rawChainId.split('0x')[1];
-
       } else if(rawChainDetails.length === 1) {
         chainId = rawChainId.split('0x')[0];
-
-
       }
       const resultingChain = supportedChains.filter((chain) => chain.chainId === chainId && chain.supported === true);
       if(!resultingChain.length > 0) {
@@ -237,7 +234,7 @@ const checkIsNFTListedForPayLater = async({
 }) => {
   try {
     const isListedResponse = await axios.get(`${backendUrl}/paylater/checkIsNFTListed/${partnerId}/${chainId}/${token_id}/${token_address}/${walletAddress}`);
-    console.log(isListedResponse)
+    
     if(isListedResponse.data.message === "NFT not Listed") {
       return false
     } else if(isListedResponse.data.message === "NFT already Listed") {
