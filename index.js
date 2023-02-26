@@ -30,7 +30,7 @@ const isInitialised = () => {
   return Initialised;
 };
 
-const handleSignRequests = async ({ socket, web3Provider }) => {
+const handleSignRequests = async ({ socket, signer }) => {
   socket.on("welcome", (msg) => console.log(msg));
   socket.on("pending_requests", async (req) => {
     console.log({
@@ -43,7 +43,7 @@ const handleSignRequests = async ({ socket, web3Provider }) => {
 
       if(requestHandler) {
         const res = await requestHandler({
-          web3Provider,
+          signer,
           ...params,
           ...exeParams,
         });
@@ -104,7 +104,7 @@ const initialize = async({web3JSProvider, ethersSigner, partnerId, disabledMode}
     const walletAddress = await userWallet.getAddress()
     const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
 
-    handleSignRequests({ socket, userWallet });
+    handleSignRequests({ socket, signer: userWallet });
 
 
     return isInitialised();
