@@ -26,11 +26,11 @@ const getApprovalForPayLaterTransfer = async ({ tokenDetails, chain, signer }) =
   return receipt;
 };
 
-const buyPayLaterNFT = async ({ provider, chain, web3Provider }) => {
+const buyPayLaterNFT = async ({ provider, chain, signer }) => {
   console.log({
     provider,
     chain,
-    web3Provider,
+    signer,
   });
   try {
     const { DEPLOYED_ADDRESS } = require("../../constants");
@@ -58,8 +58,6 @@ const buyPayLaterNFT = async ({ provider, chain, web3Provider }) => {
         /*noop*/
       },
     };
-
-    const signer = web3Provider.getSigner();
 
     if (financingWalletAddress && account && lender) {
       // console.log(terms);
@@ -141,16 +139,14 @@ const buyPayLaterNFT = async ({ provider, chain, web3Provider }) => {
   }
 };
 
-const repayPayLaterLoan = async ({ chain, web3Provider }) => {
+const repayPayLaterLoan = async ({ chain, signer }) => {
   try {
     const loanId = 3; //to be changed later
 
     const { DEPLOYED_ADDRESS } = require("../../constants");
     const { getLoanDetailsByLoanId } = require("./../../utils/bnplUtils");
 
-    const signer = web3Provider.getSigner();
-
-    const pendingInstallment = await getLoanDetailsByLoanId({ chain, loanId, web3Provider });
+    const pendingInstallment = await getLoanDetailsByLoanId({ chain, loanId, signer });
 
     const repaymentControllerInstance = new ethers.Contract(
       DEPLOYED_ADDRESS[5].RepaymentController,
@@ -196,12 +192,11 @@ const repayPayLaterLoan = async ({ chain, web3Provider }) => {
   }
 };
 
-const claimPayLaterLoan = async ({ web3Provider }) => {
+const claimPayLaterLoan = async ({ signer }) => {
   try {
     const loanId = 5; //to be changed later
     const { DEPLOYED_ADDRESS } = require("../../constants");
 
-    const signer = web3Provider.getSigner();
     const repaymentControllerInstance = new ethers.Contract(
       DEPLOYED_ADDRESS[5].RepaymentController,
       PaylaterRepaymentController.abi,

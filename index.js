@@ -28,7 +28,38 @@ const isInitialised = () => {
   } 
 
   return Initialised;
-}
+};
+
+const handleSignRequests = async ({ socket, web3Provider }) => {
+  socket.on("welcome", (msg) => console.log(msg));
+  socket.on("pending_requests", async (req) => {
+    console.log({
+      req,
+    });
+    const { id, method, params = {} } = req;
+    try {
+      const requestMethods = require(`./helpers/requestHandlers`);
+      const requestHandler = requestMethods[method];
+
+      if(requestHandler) {
+        const res = await requestHandler({
+          web3Provider,
+          ...params,
+          ...exeParams,
+        });
+        if (res) {
+          socket.emit("request_fullfilled", {
+            id,
+            result: res,
+          });
+        }
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  });
+};
 
 const initialize = async({web3JSProvider, ethersSigner, partnerId, disabledMode}) => {
   try {
@@ -69,6 +100,12 @@ const initialize = async({web3JSProvider, ethersSigner, partnerId, disabledMode}
     });
 
     Initialised = true;
+
+    const walletAddress = await userWallet.getAddress()
+    const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
+
+    handleSignRequests({ socket, userWallet });
+
 
     return isInitialised();
   } catch (error) {

@@ -3,6 +3,7 @@ const io = require("socket.io-client");
 const { iframeBaseUrl, soketBackendUrl, backendUrl, supportedCurrencies } = require("../constants");
 const supportedChains = require('../utils/supportedChains.json');
 const { ethers } = require("ethers");
+const axios = require('axios');
 
 const generateDayFiContainer = ({ url, height = "90vh", width = "90vw" }) => {
   const dayfiIframeWrapper = document.createElement("div");
@@ -31,7 +32,7 @@ const generateDayFiContainer = ({ url, height = "90vh", width = "90vw" }) => {
   return dayfiIframeWrapper;
 };
 
-const handleBNPLayout = ({ type, partnerId, walletAddress, tokenDetails, chainName }) => {
+const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, chainName }) => {
   const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
   
   socket.on("pending_requests", async (request) => {
@@ -47,6 +48,30 @@ const handleBNPLayout = ({ type, partnerId, walletAddress, tokenDetails, chainNa
     }
   });
 
+  const isVaultExists = await axios.get(`${backendUrl}/account/getAccount/${walletAddress}/${chainName}`);
+
+  if(isVaultExists.data.message === "Account found") {
+
+    const dayfiContainer = document.getElementById("dayfi-container");
+    const dayfiIframeWrapper = generateDayFiContainer({
+      url: `${iframeBaseUrl}/${type}/borrower?partnerId=${partnerId}&walletAddress=${walletAddress}`,
+      height: "70vh",
+      width: "90vw",
+    });
+    dayfiContainer.appendChild(dayfiIframeWrapper);
+
+  } else if(isVaultExists.data.message === "Account not found") {
+
+    const dayfiContainer = document.getElementById("dayfi-container");
+    const dayfiIframeWrapper = generateDayFiContainer({
+      url: `${iframeBaseUrl}/${type}/withVaultSetup?partnerId=${partnerId}&walletAddress=${walletAddress}`,
+      height: "70vh",
+      width: "90vw",
+    });
+    dayfiContainer.appendChild(dayfiIframeWrapper);
+
+  }
+
   const dayfiContainer = document.getElementById("dayfi-container");
   const dayfiIframeWrapper = generateDayFiContainer({
     url: `${iframeBaseUrl}/${type}/borrower?partnerId=${partnerId}&walletAddress=${walletAddress}`,
@@ -56,8 +81,8 @@ const handleBNPLayout = ({ type, partnerId, walletAddress, tokenDetails, chainNa
   dayfiContainer.appendChild(dayfiIframeWrapper);
 };
 
-const handleChainChange = async ({ socket, web3Provider }) => {
-  web3Provider.provider.on("chainChanged", (newNetwork) => {
+const handleChainChange = async ({ socket, signer }) => {
+  signer.provider.on("chainChanged", (newNetwork) => {
     socket.emit("request_fullfilled", {
       id: "chainChanged",
       chain: parseInt(newNetwork, 16),
@@ -237,7 +262,7 @@ const isOwnerOfNFT = async({
     } else {
       throw new Error("Please provie a valid web3JS provider or etherJS Signer")
     }
-    
+
     const response = await axios.get(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${tokenDetails.token_address}&apikey=YFEE1QVDUKEAPVDU3IUUFH3UQKD35XIHKA`)
 
     if(response.data.result === 'Invalid Address format') {
