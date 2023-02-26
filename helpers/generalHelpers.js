@@ -64,7 +64,7 @@ const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, c
 
     const dayfiContainer = document.getElementById("dayfi-container");
     const dayfiIframeWrapper = generateDayFiContainer({
-      url: `${iframeBaseUrl}/${type}/withVaultSetup?partnerId=${partnerId}&walletAddress=${walletAddress}`,
+      url: `${iframeBaseUrl}/withVaultSetup?partnerId=${partnerId}&walletAddress=${walletAddress}`,
       height: "70vh",
       width: "90vw",
     });
