@@ -1,7 +1,7 @@
 const getIsAccountConnected = async ({ signer }) => {
   const accounts = await signer.provider.listAccounts();
   if (accounts.length > 0) {
-    const network = await signer.getNetwork();
+    const network = await signer.provider.getNetwork();
     return {
       type: "accountDetails",
       isAccountConnected: true,
