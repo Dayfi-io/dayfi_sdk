@@ -71,14 +71,6 @@ const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, c
     dayfiContainer.appendChild(dayfiIframeWrapper);
 
   }
-
-  const dayfiContainer = document.getElementById("dayfi-container");
-  const dayfiIframeWrapper = generateDayFiContainer({
-    url: `${iframeBaseUrl}/${type}/borrower?partnerId=${partnerId}&walletAddress=${walletAddress}`,
-    height: "70vh",
-    width: "90vw",
-  });
-  dayfiContainer.appendChild(dayfiIframeWrapper);
 };
 
 const handleChainChange = async ({ socket, signer }) => {
