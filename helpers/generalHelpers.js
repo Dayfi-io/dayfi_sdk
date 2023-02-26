@@ -3,7 +3,7 @@ const io = require("socket.io-client");
 const { iframeBaseUrl, soketBackendUrl, backendUrl, supportedCurrencies } = require("../constants");
 const supportedChains = require('../utils/supportedChains.json');
 const { ethers } = require("ethers");
-const axios = require('axios');
+
 
 const generateDayFiContainer = ({ url, height = "90vh", width = "90vw" }) => {
   const dayfiIframeWrapper = document.createElement("div");
