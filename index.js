@@ -56,7 +56,14 @@ const handleSignRequests = async ({ socket, signer }) => {
       }
 
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      socket.emit("request_fullfilled", {
+        id,
+        result: {
+          type: "Error",
+          error
+        }
+      });
     }
   });
 };
@@ -245,6 +252,7 @@ const mountPaylaterIFrame = async({
         throw new Error("NFT is not listed for paylater");
       }
       
+      exeParams = { signer: userWallet, tokenDetails, chainId };
       handleBNPLayout({
         type: "checkout", 
         partnerId: partnerId, 
