@@ -261,7 +261,8 @@ const mountPaylaterIFrame = async({
         partnerId: partnerId, 
         walletAddress, 
         tokenDetails,
-        chainName
+        chainName,
+        chainId
       })
     }
     

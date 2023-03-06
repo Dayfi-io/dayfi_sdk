@@ -32,7 +32,7 @@ const generateDayFiContainer = ({ url, height = "90vh", width = "90vw" }) => {
   return dayfiIframeWrapper;
 };
 
-const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, chainName }) => {
+const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, chainName, chainId }) => {
   const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
   
   socket.on("pending_requests", async (request) => {
@@ -43,6 +43,30 @@ const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, c
         socket.emit("request_fullfilled", {
           id,
           result: result.data.NFTMetaData,
+        });
+      }
+    } else if(method === "getNFTDataForPayLater") {
+      const NFTMetadataResponse = await axios.get(`${backendUrl}/general/getNFTMetadataIndividual/${tokenDetails.token_id}/${tokenDetails.token_address}/${chainName}`);
+      const ListingDetails = await checkIsNFTListedForPayLater({
+        partnerId,
+        chainId,
+        token_id: tokenDetails.token_id,
+        token_address: tokenDetails.token_address,
+        walletAddress
+      });
+
+      if(ListingDetails) {
+        socket.emit("request_fullfilled", {
+          id,
+          type: "Listing Found",
+          nftMetaData: NFTMetadataResponse.data.NFTMetaData,
+          payLaterListingDetails: ListingDetails
+        });
+      } else {
+        socket.emit("request_fullfilled", {
+          id,
+          type: "Listing Not Found",
+          nftMetaData: NFTMetadataResponse.data.NFTMetaData
         });
       }
     }
