@@ -46,7 +46,7 @@ const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, c
         });
       }
     } else if(method === "getNFTDataForPayLater") {
-      const NFTMetadataResponse = await axios.get(`${backendUrl}/general/getNFTMetadataIndividual/${tokenDetails.token_id}/${tokenDetails.token_address}/${chainName}`);
+      const NFTMetadataResponse = await axios.get(`${backendUrl}/general/getNFTMetadataIndividual/${tokenDetails.token_id}/${tokenDetails.token_address}/${chainId}`);
       const ListingDetails = await checkIsNFTListedForPayLater({
         partnerId,
         chainId,
