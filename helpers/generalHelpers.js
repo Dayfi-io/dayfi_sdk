@@ -311,7 +311,7 @@ const checkIsNFTListedForPayLater = async({
     console.error(error);
     throw new Error(error.message)
   }
-}
+};
 
 module.exports = {
   generateDayFiContainer,

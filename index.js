@@ -111,7 +111,9 @@ const initialize = async({web3JSProvider, ethersSigner, partnerId, disabledMode}
     const walletAddress = await userWallet.getAddress()
     const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
 
-    handleSignRequests({ socket, signer: userWallet });
+    if(!disabledMode) {
+      handleSignRequests({ socket, signer: userWallet });
+    }
 
 
     return isInitialised();
@@ -252,7 +254,8 @@ const mountPaylaterIFrame = async({
         throw new Error("NFT is not listed for paylater");
       }
       
-      exeParams = { signer: userWallet, tokenDetails, chainId };
+      exeParams = { signer: userWallet, tokenDetails, chainId, currentUserAddress: walletAddress, partnerId };
+      
       handleBNPLayout({
         type: "checkout", 
         partnerId: partnerId, 

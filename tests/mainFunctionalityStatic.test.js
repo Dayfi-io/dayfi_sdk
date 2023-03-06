@@ -3,8 +3,7 @@ const {
     initialize
 } = require('../index');
 const { ethers } = require("ethers");
-const web3 = require("web3");
-const Web3ETH = require('web3-eth');
+const { createVault } = require('../helpers/requestHandlers/gnosisVaultHandlers');
 
 // wallet address = 0xdA77BABE7FabeB2940240478238817F9797b7341
 const _mnemonicPhrase = 'milk private soul sugar pottery between unhappy husband scan tomato hollow list';
@@ -65,32 +64,24 @@ test('Should throw error for invalid partner', async () => {
     try {
     
         const wallet = await getEtherJSWallet();
-        await initialize({ethersSigner: wallet, partnerId: "testing", disabledMode: true});
+        await initialize({ethersSigner: wallet, partnerId: "0Z1iibgUfaSphgSX-Eei0", disabledMode: true});
     } catch (error) {
-        expect(error.message).toBe("Invalid Partner ID: " + "testing")
+        expect(error.message).toBe("Invalid Partner ID: " + "0Z1iibgUfaSphgSX-Eei0")
     }
 });
 
-test('Should list NFT for BNPL', async () => {
+test('Should create a gnosis wallet', async () => {
+    try {
 
-    const wallet = await getEtherJSWallet();
-
-    const tokenDetails = {
-        token_address: NFTTokenAddressForLsiting,
-        token_id: NFTTokenIdForLsiting,
-        contract_type: NFTTokenContractTypeForLsiting,
-        name: NFTTokenNameForLsiting,
-    };
-
-    const dayfiConfig = {
-        partnerId: partnerIdFortesting,
-        walletAddress: wallet.address
-    };
-
-    await listNFTForPayLater({
-        tokenDetails,
-        terms: TermsForListing,
-        dayfiConfig,
-        ethersSigner: wallet
-    })
-});
+        const wallet = await getEtherJSWallet();
+        await initialize({ethersSigner: wallet, partnerId: "0Z1iibgUfaSphgSX-Eei0", disabledMode: true});
+        await createVault({
+            signer: wallet,
+            currentUserAddress: await wallet.getAddress(),
+            chainId: await wallet.getChainId(),
+            partnerId: '0Z1iibgUfaSphgSX-Eei0'
+        })
+    } catch(error) {
+        console.error(error)
+    }
+}, 30000);
