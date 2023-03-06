@@ -37,6 +37,7 @@ const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, c
   
   socket.on("pending_requests", async (request) => {
     const { id, method, params = {} } = request;
+    console.log(method)
     if(method === "getTokenDetailsForListingNFT") {
       const result = await axios.get(`${backendUrl}/general/getNFTMetadataIndividual/${tokenDetails.token_id}/${tokenDetails.token_address}/${chainName}`);
       if(result) {
@@ -54,6 +55,7 @@ const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, c
         token_address: tokenDetails.token_address,
         walletAddress
       });
+      console.log(ListingDetails)
 
       if(ListingDetails) {
         socket.emit("request_fullfilled", {
