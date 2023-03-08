@@ -73,7 +73,7 @@ const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, c
       }
     }
   });
-  const chainId = await getChainIdByChainName(chainName)
+
   const isVaultExists = await axios.get(`${backendUrl}/account/getAccount/${walletAddress}/${chainId}`);
   if(isVaultExists.data.message === "Account found") {
 
