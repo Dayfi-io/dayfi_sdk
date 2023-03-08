@@ -73,9 +73,8 @@ const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, c
       }
     }
   });
-
-  const isVaultExists = await axios.get(`${backendUrl}/account/getAccount/${walletAddress}/${chainName}`);
-  console.log(isVaultExists)
+  const chainId = await getChainIdByChainName(chainName)
+  const isVaultExists = await axios.get(`${backendUrl}/account/getAccount/${walletAddress}/${chainId}`);
   if(isVaultExists.data.message === "Account found") {
 
     const dayfiContainer = document.getElementById("dayfi-container");
