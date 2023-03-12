@@ -13,7 +13,9 @@ const createVault = async ({
 }) => {
     try {
         const dayfiSignerDetails = await getSignerAddress({chainId});
-        const dayfiSignerAddress = dayfiSignerDetails.result.Signer.address;
+        const signerAddress = dayfiSignerDetails.result.Signer.signerAddress;
+        const recoveryAddress = dayfiSignerDetails.result.Signer.recoveryAddress;
+
 
         // Create EthAdapter instance
         const ethAdapter = new EthersAdapter.default({
@@ -25,7 +27,7 @@ const createVault = async ({
         const safeFactory = await SafeFactory.create({ ethAdapter });
         // Config of the deployed Safe
         const safeAccountConfig = {
-            owners: [currentUserAddress, dayfiSignerAddress],
+            owners: [currentUserAddress, signerAddress, recoveryAddress],
             threshold: 2
         };
 
