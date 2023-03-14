@@ -16,10 +16,9 @@ const {
 const abiDecoder = require('abi-decoder');
 const { default: axios } = require("axios");
 const dayjs = require('dayjs');
-const { backendUrl } = require('../../constants');
+const { backendUrl, ZERO_ADDRESS, DEPLOYED_ADDRESS } = require('../../constants');
 
 const getApprovalForPayLaterTransfer = async ({ tokenDetails, chain, signer }) => {
-  const { DEPLOYED_ADDRESS, ZERO_ADDRESS, backendUrl } = require("../../constants");
 
   let tokenContractInstance = null;
   if (tokenDetails.contract_type === "ERC721") {
