@@ -16,6 +16,7 @@ const {
 const abiDecoder = require('abi-decoder');
 const { default: axios } = require("axios");
 const dayjs = require('dayjs');
+const { backendUrl } = require('../../constants');
 
 const getApprovalForPayLaterTransfer = async ({ tokenDetails, chain, signer }) => {
   const { DEPLOYED_ADDRESS, ZERO_ADDRESS, backendUrl } = require("../../constants");
