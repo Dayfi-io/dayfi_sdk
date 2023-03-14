@@ -46,7 +46,8 @@ const buyPayLaterNFT = async ({
   socket
 }) => {
 
-  try {
+  // try {
+
     if(!durationData) {
       throw new Error("Invalid Borrower Terms")
     }
@@ -241,10 +242,10 @@ const buyPayLaterNFT = async ({
       }
 
     }
-  } catch (err) {
-    console.log(err);
-    throw new Error(err.message);
-  }
+  // } catch (err) {
+  //   console.log(err);
+  //   throw new Error(err.message);
+  // }
 };
 
 const repayPayLaterLoan = async ({ chain, signer }) => {
