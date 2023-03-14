@@ -1,6 +1,6 @@
 {
-  "name": "dayfi_sdk",
-  "version": "0.1.39-alpha.0",
+  "name": "dayfi-sdk",
+  "version": "0.1.40-alpha.0",
   "description": "Dayfi SDK allows business/dApps to enable buying NFTs on affordable payment options, rent & loan providing users with 100% utility.",
   "main": "index.js",
   "repository": {
@@ -31,8 +31,10 @@
     "@openzeppelin/contracts": "^4.8.0",
     "@safe-global/safe-core-sdk": "^3.3.2",
     "@safe-global/safe-ethers-lib": "^1.9.2",
+    "abi-decoder": "^2.4.0",
     "axios": "^0.27.2",
     "bignumber.js": "^9.1.0",
+    "dayjs": "^1.11.7",
     "ethers": "^5.7.1",
     "immutable": "^4.1.0",
     "semver": "^7.3.8",
@@ -40,7 +42,7 @@
     "web3": "^1.8.2",
     "web3-utils": "^1.8.1"
   },
-  "author": "Engineers@Dayfi",
+  "author": "rajat@dayfi.io",
   "license": "MIT",
   "keywords": [
     "DayFi",

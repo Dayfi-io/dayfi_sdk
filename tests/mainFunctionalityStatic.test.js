@@ -5,16 +5,16 @@ const {
 const { ethers } = require("ethers");
 const { createVault } = require('../helpers/requestHandlers/gnosisVaultHandlers');
 
-// wallet address = 0xdA77BABE7FabeB2940240478238817F9797b7341
-const _mnemonicPhrase = 'milk private soul sugar pottery between unhappy husband scan tomato hollow list';
+// wallet address = 0xA4a9a6beE5BEf0bB23c339fe419af49A1B0Fbd49
+const _mnemonicPhrase = 'police actor lemon eight stock gloom lawsuit dignity wear burst drum coast';
 const privateKey = '0xd609b78218a7b3bcc3d0a5c406cd3b3635cb8883fcf11f7e740f4a3cafbb5c52';
 
 const provider = new ethers.providers.AlchemyProvider('goerli', 'bqirU6vw0QkdvlubBYKyqTZEKzuPMtGW');
 const partnerIdFortesting = '0Z1iibgUfaSphgSX-Eei0';
 const NFTTokenAddressForLsiting = '0xf5de760f2e916647fd766B4AD9E85ff943cE3A2b';
-const NFTTokenIdForLsiting = '1837486';
+const NFTTokenIdForLsiting = '3120747';
 const NFTTokenContractTypeForLsiting = 'ERC721';
-const NFTTokenNameForLsiting = 'MultiFaucet NFT #1837486';
+const NFTTokenNameForLsiting = 'MultiFaucet NFT #3120747';
 const TermsForListing = {
     price: "0.02",
     interest: "20",
@@ -85,3 +85,11 @@ test('Should create a gnosis wallet', async () => {
         console.error(error)
     }
 }, 30000);
+
+test('BNPL Testing', async () => {
+    try {
+        const wallet = await getEtherJSWallet();
+    } catch(error) {
+        console.error(error)
+    }
+})

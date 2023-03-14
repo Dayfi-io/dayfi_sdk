@@ -3,12 +3,22 @@ const { ethers } = require("ethers");
 const ERC721 = require("../../abis/ERC721.json");
 const ERC1155 = require("../../abis/ERC1155.json");
 const wETH = require("../../abis/wETH.json");
+const ERC20 = require("../../artifacts/ERC20.json");
 const PayLaterLoanCore = require("../../artifacts/PayLaterLoanCore.json");
 const OriginationManager = require("../../artifacts/OriginationManager.json");
 const PaylaterRepaymentController = require("../../artifacts/PayLaterRepaymentController.json");
+const {
+  checkIsNFTListedForPayLater,
+  SupportedCurrencies,
+  isPartnerExists,
+  isOwnerOfNFTByOwnerAddress
+} = require('../generalHelpers');
+const abiDecoder = require('abi-decoder');
+const { default: axios } = require("axios");
+const dayjs = require('dayjs');
 
 const getApprovalForPayLaterTransfer = async ({ tokenDetails, chain, signer }) => {
-  const { DEPLOYED_ADDRESS } = require("../../constants");
+  const { DEPLOYED_ADDRESS, ZERO_ADDRESS, backendUrl } = require("../../constants");
 
   let tokenContractInstance = null;
   if (tokenDetails.contract_type === "ERC721") {
@@ -26,30 +36,58 @@ const getApprovalForPayLaterTransfer = async ({ tokenDetails, chain, signer }) =
   return receipt;
 };
 
-const buyPayLaterNFT = async ({ provider, chain, signer }) => {
-  console.log({
-    provider,
-    chain,
-    signer,
-  });
-  try {
-    const { DEPLOYED_ADDRESS } = require("../../constants");
+const buyPayLaterNFT = async ({ 
+  signer,
+  currentUserAddress,
+  chainId,
+  partnerId,
+  tokenDetails,
+  durationData,
+  socket
+}) => {
 
+  try {
+    if(!durationData) {
+      throw new Error("Invalid Borrower Terms")
+    }
+
+    if(!tokenDetails) {
+      throw new Error("Invalid Token Details")
+    }
+
+    const partnerExists = await isPartnerExists(partnerId);
+    if(!partnerExists) {
+      throw new Error("Partner Does not exists")
+    }
+    abiDecoder.addABI(PayLaterLoanCore.abi);
+    const { DEPLOYED_ADDRESS } = require("../../constants");
+    const isVaultExists = await axios.get(`${backendUrl}/account/getAccount/${currentUserAddress}/${chainId}`);
+    if(!isVaultExists || isVaultExists.data.message === "Account not found") {
+      throw new Error("User Vault not found")
+    };
+
+    const payLaterListingDetails = await checkIsNFTListedForPayLater({
+      partnerId,
+      walletAddress: currentUserAddress,
+      chainId,
+      token_id: tokenDetails.token_id,
+      token_address: tokenDetails.token_address
+    });
+
+    if(!payLaterListingDetails) {
+      throw new Error("NFT Listing Not Found");
+    }
+    
     const { tokenDetails, financingWalletAddress, account, ListingPrice, lender, terms, onClose, getRequests } = {
-      tokenDetails: {
-        token_address: "0xf5de760f2e916647fd766b4ad9e85ff943ce3a2b",
-        token_id: "1837486",
-        contract_type: "ERC721",
-        name: "MultiFaucet Test NFT",
-      },
-      financingWalletAddress: "0x68d68DA8A7B994F624fed7b387781880283108Cc",
-      account: "0x4146838819AE0E69291442e9A97aB75FE51bBA15",
-      ListingPrice: "0.02",
-      lender: "0x23cC353858Cbf5cc7F16C47484a29556f6cE00C3",
+      tokenDetails,
+      financingWalletAddress: isVaultExists.account.primaryVaultProxyAddress,
+      account: currentUserAddress,
+      ListingPrice: payLaterListingDetails.price,
+      lender: payLaterListingDetails.lender,
       terms: {
-        loanDuration: 600,
-        rateOfInterest: 1,
-        installments: 2,
+        loanDuration: parseInt(durationData?.duration) * (durationData?.durationType === "Months" ? 2592000 : durationData?.durationType === "Days" ? 86400 : 0),
+        rateOfInterest: parseInt(payLaterListingDetails.interest),
+        installments: parseInt(durationData?.installments),
       },
       onClose: () => {
         /*noop*/
@@ -58,6 +96,15 @@ const buyPayLaterNFT = async ({ provider, chain, signer }) => {
         /*noop*/
       },
     };
+
+    // Supported chain check
+    const Chains = await SupportedCurrencies();
+    const isChainSupported = Chains.filter((chain) => chain.chainId.split("0x")[1] === payLaterListingDetails.chain);
+    if(!(isChainSupported.length > 0)) {
+      throw new Error(`Chain ${payLaterListingDetails.chain} not supported`);
+    }
+
+    const payableCurrency = isChainSupported[0].currency[payLaterListingDetails.currency]
 
     if (financingWalletAddress && account && lender) {
       // console.log(terms);
@@ -71,7 +118,7 @@ const buyPayLaterNFT = async ({ provider, chain, signer }) => {
         // The tokenID of the collateral bundle
         collateralTokenId: parseInt(tokenDetails.token_id),
         // The payable currency for the loan principal and interest
-        payableCurrency: wETH.address,
+        payableCurrency: payableCurrency,
         // The number parts in the payment cycle
         parts: terms.installments,
         // The part duration in seconds
@@ -79,63 +126,124 @@ const buyPayLaterNFT = async ({ provider, chain, signer }) => {
       };
       // console.log(loanTerms);
 
+      const PayLateCore = new ethers.Contract(DEPLOYED_ADDRESS[parseInt(chainId)].PayLaterLoanCore, PayLaterLoanCore.abi, signer);
+
       const tokenType = tokenDetails.contract_type === "ERC721" ? 0 : tokenDetails.contract_type === "ERC1155" ? 1 : 3;
-
-      const wETHContractInstance = new ethers.Contract(wETH.address, wETH.abi, signer);
-
-      const PayLateCore = new ethers.Contract(DEPLOYED_ADDRESS[5].PayLaterLoanCore, PayLaterLoanCore.abi, signer);
-      console.log({
-        PayLateCore,
-      });
-      // const PayLateCore = new web3Js.eth.Contract(PayLaterLoanCore.abi, DEPLOYED_ADDRESS[5].PayLaterLoanCore);
       const ins = await PayLateCore.getFirstInstallmentWithoutLoan(
         loanTerms.principal,
         loanTerms.parts,
         loanTerms.interest,
       );
-      console.log({
-        ins,
-      });
-
-      const approveRequest = await wETHContractInstance.approve(DEPLOYED_ADDRESS[5].OriginationManager, ins);
-
-      await approveRequest.wait();
-
       const OriginationManagerInstance = new ethers.Contract(
-        DEPLOYED_ADDRESS[5].OriginationManager,
+        DEPLOYED_ADDRESS[parseInt(chainId)].OriginationManager,
         OriginationManager.abi,
         signer,
       );
 
-      console.log({
-        loanTerms,
-        account,
-        financingWalletAddress,
-        lender,
-        tokenType,
-        token_address: tokenDetails.token_address,
-        OriginationManagerInstance,
+      const isLenderTheOwnerOfNFTCheck = await isOwnerOfNFTByOwnerAddress({
+        signer,
+        tokenDetails,
+        ownerAddress: lender
       });
 
-      const response = await OriginationManagerInstance.initializePayLaterRequest(
-        loanTerms,
-        account,
-        financingWalletAddress,
-        lender,
-        tokenType,
-        tokenDetails.token_address,
-      );
+      if(!isLenderTheOwnerOfNFTCheck) {
+        // ------------- Update Listing ----------------
+        
+        await axios.post(`${backendUrl}/paylater/updatePaylater`, {
+          id: payLaterListingDetails.id,
+          expired: '1'
+        });
 
-      console.log({ response });
+        throw new Error("Lender is not the Owner of NFT");
 
-      await PayLateCore.once("LoanStarted", (loanId, lender, borrower, borrowerSecondary) => {
-        console.log("From loanId", { loanId, lender, borrower, borrowerSecondary });
-      });
+      }
 
-      // getRequests();
+      if(loanTerms.payableCurrency === ZERO_ADDRESS) {
+          const response = await OriginationManagerInstance.initializePayLaterRequest(
+            loanTerms,
+            account,
+            financingWalletAddress,
+            lender,
+            tokenType,
+            tokenDetails.token_address,
+            {
+              value: ins
+            }
+          );
+
+          const receipt = response.wait();
+          const logs = abiDecoder.decodeLogs(receipt.logs)[0];
+          const loanId = parseInt(logs.events[0].value);
+
+          if(loanId) {
+            await axios.post(`${backendUrl}/paylater/updatePaylater`, {
+              id: payLaterListingDetails.id,
+              borrower: account,
+              loan_sanctioned: '1',
+              no_of_installments: terms.installments,
+              start_date: dayjs().format('DD/MM/YYYY[ ]HH:mm:ss'),
+              end_date: dayjs().add(loanTerms.durationSecs, 's').format('DD/MM/YYYY[ ]HH:mm:ss'),
+              duration: loanTerms.durationSecs,
+              buyingTransactionHash: response.transactionHash,
+              loadId: loanId
+            });
+
+            const payLaterListingUpdatedDetails = await checkIsNFTListedForPayLater({
+              partnerId,
+              walletAddress: currentUserAddress,
+              chainId,
+              token_id: tokenDetails.token_id,
+              token_address: tokenDetails.token_address
+            });
+
+            return payLaterListingUpdatedDetails;
+          }
+      } else {
+          const TokenInstance = new ethers.Contract(loanTerms.payableCurrency, ERC20.abi, signer);
+          const approveRequest = await TokenInstance.approve(DEPLOYED_ADDRESS[parseInt(chainId)].OriginationManager, ins);
+          await approveRequest.wait();
+          const response = await OriginationManagerInstance.initializePayLaterRequest(
+            loanTerms,
+            account,
+            financingWalletAddress,
+            lender,
+            tokenType,
+            tokenDetails.token_address,
+          );
+          const receipt = response.wait();
+          const logs = abiDecoder.decodeLogs(receipt.logs)[0];
+          const loanId = parseInt(logs.events[0].value);
+
+          if(loanId) {
+            await axios.post(`${backendUrl}/paylater/updatePaylater`, {
+              id: payLaterListingDetails.id,
+              borrower: account,
+              loan_sanctioned: '1',
+              no_of_installments: terms.installments,
+              start_date: dayjs().format('DD/MM/YYYY[ ]HH:mm:ss'),
+              end_date: dayjs().add(loanTerms.durationSecs, 's').format('DD/MM/YYYY[ ]HH:mm:ss'),
+              duration: loanTerms.durationSecs,
+              buyingTransactionHash: response.transactionHash,
+              loadId: loanId
+            });
+
+            const payLaterListingUpdatedDetails = await checkIsNFTListedForPayLater({
+              partnerId,
+              walletAddress: currentUserAddress,
+              chainId,
+              token_id: tokenDetails.token_id,
+              token_address: tokenDetails.token_address
+            });
+
+            return payLaterListingUpdatedDetails;
+
+          }
+      }
+
     }
   } catch (err) {
     console.log(err);
+    throw new Error(err.message);
   }
 };
 

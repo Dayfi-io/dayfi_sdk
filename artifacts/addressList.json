@@ -1,0 +1,16 @@
+{
+    "5": {
+        "PayLaterLoanLibrary": "0x89127aFf4d8894A539038144CEA510cfCa9A565b",
+        "FeeController": "0x5893535e1C58e11FCc3487476CE8996842dcd209",
+        "PayLaterLoanCore": "0x3D81c70943840A65F6901a827209e9D8778F1Afb",
+        "RepaymentController": "0x4fA3d13a87c5E8e41a6E59e5BDA5A8Aa4c484bd2",
+        "OriginationManager":  "0xCb071c909650b79DAc916c53625e1248994442bc"
+    },
+    "80001": {
+        "PayLaterLoanLibrary": "0x626C21e0a62f5bC577A9BDe3cFB141DE47e68f29",
+        "FeeController": "0x03F7C2604e2cA8527776CdCbc73Add3455e37FCA",
+        "PayLaterLoanCore": "0x4C57237f7fcFE8760dc99dFF9B3881472dD1ac15",
+        "RepaymentController": "0xF91ac6F56E3F26388c5B2e149944DC250856054f",
+        "OriginationManager": "0x69e78639F22cfaecc0cB57a2f8c9e2ffcD2C5aC5"
+    }
+}

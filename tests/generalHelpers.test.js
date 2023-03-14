@@ -1,7 +1,8 @@
 const { 
     checkIsSupportedChainByChainId,
     getSupportedChains,
-    validateLenderTerms
+    validateLenderTerms,
+    SupportedCurrencies
 } = require('../helpers/generalHelpers');
 
 test('Should return chain is supported', async () => {
@@ -39,6 +40,15 @@ test('Should return supported chain only', async () => {
         console.error(error, "error")
     }
 });
+
+test('SupportedCurrencies', async () => {
+    const Chains = await SupportedCurrencies();
+    const isChainSupported = Chains.filter((chain) => chain.chainId.split("0x")[1] === "5");
+
+    console.log(isChainSupported)
+    const payableCurrency = isChainSupported[0].currency["ETHGoreli"];
+    console.log(payableCurrency)
+})
 
 test('Should validate the lender terms on set restrictions', async () => {
     //price success case: price > 0 

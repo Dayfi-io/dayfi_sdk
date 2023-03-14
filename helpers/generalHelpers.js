@@ -33,6 +33,7 @@ const generateDayFiContainer = ({ url, height = "90vh", width = "90vw" }) => {
 };
 
 const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, chainName, chainId }) => {
+  try {
   const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
   
   socket.on("pending_requests", async (request) => {
@@ -95,6 +96,9 @@ const handleBNPLayout = async ({ type, partnerId, walletAddress, tokenDetails, c
     });
     dayfiContainer.appendChild(dayfiIframeWrapper);
 
+  }
+  } catch(error) {
+    throw new Error(error)
   }
 };
 
@@ -266,7 +270,8 @@ const validateNFT = async({
 const isOwnerOfNFT = async({
   tokenDetails,
   web3JSProvider,
-  ethersSigner
+  ethersSigner,
+  signer
 }) => {
   try{
 
@@ -276,6 +281,8 @@ const isOwnerOfNFT = async({
       userWallet = (new ethers.providers.Web3Provider(web3JSProvider)).getSigner();
     } else if(ethersSigner) {
       userWallet = ethersSigner;
+    } else if(signer) {
+      userWallet = signer;
     } else {
       throw new Error("Please provie a valid web3JS provider or etherJS Signer")
     }
@@ -295,6 +302,55 @@ const isOwnerOfNFT = async({
             
             const currentOwnerAddress = await NFTContract.ownerOf(tokenDetails.token_id);
             if(currentOwnerAddress === await userWallet.getAddress()) {
+              return true;
+            } else {
+              return false;
+            }
+        }
+    } 
+  } catch(error) {
+    console.error(error);
+    throw new Error(error.message)
+  }
+
+};
+
+const isOwnerOfNFTByOwnerAddress = async({
+  tokenDetails,
+  web3JSProvider,
+  ethersSigner,
+  signer, 
+  ownerAddress
+}) => {
+  try{
+
+    let userWallet;
+
+    if(web3JSProvider) {
+      userWallet = (new ethers.providers.Web3Provider(web3JSProvider)).getSigner();
+    } else if(ethersSigner) {
+      userWallet = ethersSigner;
+    } else if(signer) {
+      userWallet = signer;
+    } else {
+      throw new Error("Please provie a valid web3JS provider or etherJS Signer")
+    }
+
+    const response = await axios.get(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${tokenDetails.token_address}&apikey=YFEE1QVDUKEAPVDU3IUUFH3UQKD35XIHKA`)
+
+    if(response.data.result === 'Invalid Address format') {
+        throw new Error('Invalid Contract address');
+    } else {
+        var isOwnerOffunctionExists = JSON.parse(response.data.result).find((object) => object.name === 'ownerOf');
+        if(!isOwnerOffunctionExists) {
+            throw new Error('Unable to verify NFT OwnerShip: Contract does not have ownerOf property');
+        } else {
+            const ABI = JSON.parse(response.data.result);
+
+            const NFTContract = new ethers.Contract(tokenDetails.token_address, ABI, userWallet);   
+            
+            const currentOwnerAddress = await NFTContract.ownerOf(tokenDetails.token_id);
+            if(currentOwnerAddress === ownerAddress) {
               return true;
             } else {
               return false;
@@ -352,5 +408,6 @@ module.exports = {
   validateNFT,
   getChainIdByChainName,
   checkIsNFTListedForPayLater,
-  isOwnerOfNFT
+  isOwnerOfNFT,
+  isOwnerOfNFTByOwnerAddress
 };
