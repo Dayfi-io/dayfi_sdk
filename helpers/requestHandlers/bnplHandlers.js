@@ -210,7 +210,7 @@ const buyPayLaterNFT = async ({
             tokenType,
             tokenDetails.token_address,
           );
-          const receipt = response.wait();
+          const receipt = await response.wait();
           const logs = abiDecoder.decodeLogs(receipt.logs)[0];
           const loanId = parseInt(logs.events[0].value);
 
