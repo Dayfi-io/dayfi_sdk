@@ -81,7 +81,7 @@ const buyPayLaterNFT = async ({
     }
     
     const { financingWalletAddress, account, ListingPrice, lender, terms, onClose, getRequests } = {
-      financingWalletAddress: isVaultExists.account.primaryVaultProxyAddress,
+      financingWalletAddress: isVaultExists.data.account.primaryVaultProxyAddress,
       account: currentUserAddress,
       ListingPrice: payLaterListingDetails.price,
       lender: payLaterListingDetails.lender,
