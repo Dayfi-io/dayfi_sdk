@@ -46,7 +46,7 @@ const buyPayLaterNFT = async ({
   socket
 }) => {
 
-  // try {
+  try {
 
     if(!durationData) {
       throw new Error("Invalid Borrower Terms")
@@ -79,8 +79,7 @@ const buyPayLaterNFT = async ({
       throw new Error("NFT Listing Not Found");
     }
     
-    const { tokenDetails, financingWalletAddress, account, ListingPrice, lender, terms, onClose, getRequests } = {
-      tokenDetails,
+    const { financingWalletAddress, account, ListingPrice, lender, terms, onClose, getRequests } = {
       financingWalletAddress: isVaultExists.account.primaryVaultProxyAddress,
       account: currentUserAddress,
       ListingPrice: payLaterListingDetails.price,
@@ -242,10 +241,10 @@ const buyPayLaterNFT = async ({
       }
 
     }
-  // } catch (err) {
-  //   console.log(err);
-  //   throw new Error(err.message);
-  // }
+  } catch (err) {
+    console.log(err);
+    throw new Error(err.message);
+  }
 };
 
 const repayPayLaterLoan = async ({ chain, signer }) => {

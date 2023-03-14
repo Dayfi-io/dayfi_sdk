@@ -1,6 +1,6 @@
 {
   "name": "dayfi_sdk",
-  "version": "0.1.41-alpha.0",
+  "version": "0.1.42-alpha.0",
   "description": "Dayfi SDK allows business/dApps to enable buying NFTs on affordable payment options, rent & loan providing users with 100% utility.",
   "main": "index.js",
   "repository": {
