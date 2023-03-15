@@ -170,11 +170,16 @@ const buyPayLaterNFT = async ({
               value: ins
             }
           );
+          console.log(response)
 
           const receipt = await response.wait();
-          const logs = abiDecoder.decodeLogs(receipt.logs)[0];
-          const loanId = parseInt(logs.events[0].value);
+          console.log(receipt)
 
+          const logs = abiDecoder.decodeLogs(receipt.logs)[0];
+          console.log(logs)
+
+          const loanId = parseInt(logs.events[0].value);
+          console.log(loanId)
           if(loanId) {
             await axios.post(`${backendUrl}/paylater/updatePaylater`, {
               id: payLaterListingDetails.id,
