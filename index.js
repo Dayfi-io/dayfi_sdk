@@ -270,7 +270,7 @@ const mountPaylaterIFrame = async({
         if(method === "BNPLSucess") {
           if(params.token_address === tokenDetails.token_address && 
             params.token_id === tokenDetails.token_id) {
-              callback(params.payLaterRequest)
+              callback(params.selectedDuration)
             }
         }
       });
