@@ -188,7 +188,7 @@ const buyPayLaterNFT = async ({
               end_date: await dayjs().add(loanTerms.durationSecs, 's').format('DD/MM/YYYY[ ]HH:mm:ss'),
               duration: loanTerms.durationSecs,
               buyingTransactionHash: receipt.transactionHash,
-              loadId: loanId
+              loanId: loanId
             });
 
 
@@ -228,7 +228,7 @@ const buyPayLaterNFT = async ({
               end_date: await dayjs().add(loanTerms.durationSecs, 's').format('DD/MM/YYYY[ ]HH:mm:ss'),
               duration: loanTerms.durationSecs,
               buyingTransactionHash: receipt.transactionHash,
-              loadId: loanId
+              loanId: loanId
             });
 
             const payLaterListingUpdatedDetails = await checkIsNFTListedForPayLater({
