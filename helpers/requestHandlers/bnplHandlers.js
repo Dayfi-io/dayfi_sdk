@@ -170,28 +170,28 @@ const buyPayLaterNFT = async ({
               value: ins
             }
           );
-          console.log(response)
+
 
           const receipt = await response.wait();
-          console.log(receipt)
 
           const logs = abiDecoder.decodeLogs(receipt.logs)[0];
-          console.log(logs)
+
 
           const loanId = parseInt(logs.events[0].value);
-          console.log(loanId)
+
           if(loanId) {
             await axios.post(`${backendUrl}/paylater/updatePaylater`, {
               id: payLaterListingDetails.id,
               borrower: account,
               loan_sanctioned: '1',
               no_of_installments: terms.installments,
-              start_date: dayjs().format('DD/MM/YYYY[ ]HH:mm:ss'),
-              end_date: dayjs().add(loanTerms.durationSecs, 's').format('DD/MM/YYYY[ ]HH:mm:ss'),
+              start_date: await dayjs().format('DD/MM/YYYY[ ]HH:mm:ss'),
+              end_date: await dayjs().add(loanTerms.durationSecs, 's').format('DD/MM/YYYY[ ]HH:mm:ss'),
               duration: loanTerms.durationSecs,
-              buyingTransactionHash: response.transactionHash,
+              buyingTransactionHash: receipt.transactionHash,
               loadId: loanId
             });
+            console.log(loanTerms.durationSecs, await dayjs().format('DD/MM/YYYY[ ]HH:mm:ss'))
 
             const payLaterListingUpdatedDetails = await checkIsNFTListedForPayLater({
               partnerId,
