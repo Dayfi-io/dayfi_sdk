@@ -266,7 +266,7 @@ const mountPaylaterIFrame = async({
 
       socket.on("pending_requests", async (req) => {
         console.log(req)
-        const { id, method, params = {} } = request;
+        const { id, method, params = {} } = req;
         if(method === "BNPLSucess") {
           if(params.token_address === tokenDetails.token_address && 
             params.token_id === tokenDetails.token_id) {
