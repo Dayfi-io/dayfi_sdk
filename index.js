@@ -33,9 +33,6 @@ const isInitialised = () => {
 const handleSignRequests = async ({ socket, signer }) => {
   socket.on("welcome", (msg) => console.log(msg));
   socket.on("pending_requests", async (req) => {
-    console.log({
-      req,
-    });
     const { id, method, params = {} } = req;
     try {
       const requestMethods = require(`./helpers/requestHandlers`);
@@ -222,7 +219,8 @@ const mountPaylaterIFrame = async({
   chainName,
   dayfiConfig,
   web3JSProvider,
-  ethersSigner
+  ethersSigner,
+  callback
 }) => {
   try {
     const { partnerId, walletAddress } = dayfiConfig;
@@ -253,6 +251,7 @@ const mountPaylaterIFrame = async({
       if(!isPayLaterExists) {
         throw new Error("NFT is not listed for paylater");
       }
+      const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
       
       exeParams = { signer: userWallet, tokenDetails, chainId, currentUserAddress: walletAddress, partnerId };
       
@@ -263,7 +262,19 @@ const mountPaylaterIFrame = async({
         tokenDetails,
         chainName,
         chainId
-      })
+      });
+
+      socket.on("pending_requests", async (req) => {
+        console.log(req)
+        const { id, method, params = {} } = request;
+        if(method === "BNPLSucess") {
+          if(params.token_address === tokenDetails.token_address && 
+            params.token_id === tokenDetails.token_id) {
+              callback(params.payLaterRequest)
+            }
+        }
+      });
+
     }
     
   } catch (error) {

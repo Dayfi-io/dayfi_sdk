@@ -171,7 +171,6 @@ const buyPayLaterNFT = async ({
             }
           );
 
-
           const receipt = await response.wait();
 
           const logs = abiDecoder.decodeLogs(receipt.logs)[0];
@@ -191,7 +190,7 @@ const buyPayLaterNFT = async ({
               buyingTransactionHash: receipt.transactionHash,
               loadId: loanId
             });
-            console.log(loanTerms.durationSecs, await dayjs().format('DD/MM/YYYY[ ]HH:mm:ss'))
+
 
             const payLaterListingUpdatedDetails = await checkIsNFTListedForPayLater({
               partnerId,
@@ -225,10 +224,10 @@ const buyPayLaterNFT = async ({
               borrower: account,
               loan_sanctioned: '1',
               no_of_installments: terms.installments,
-              start_date: dayjs().format('DD/MM/YYYY[ ]HH:mm:ss'),
-              end_date: dayjs().add(loanTerms.durationSecs, 's').format('DD/MM/YYYY[ ]HH:mm:ss'),
+              start_date: await dayjs().format('DD/MM/YYYY[ ]HH:mm:ss'),
+              end_date: await dayjs().add(loanTerms.durationSecs, 's').format('DD/MM/YYYY[ ]HH:mm:ss'),
               duration: loanTerms.durationSecs,
-              buyingTransactionHash: response.transactionHash,
+              buyingTransactionHash: receipt.transactionHash,
               loadId: loanId
             });
 
