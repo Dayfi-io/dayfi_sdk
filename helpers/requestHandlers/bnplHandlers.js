@@ -158,7 +158,7 @@ const buyPayLaterNFT = async ({
 
       }
 
-      if(loanTerms.payableCurrency === ZERO_ADDRESS) {
+      if(loanTerms.payableCurrency === ZERO_ADDRESS && isLenderTheOwnerOfNFTCheck) {
           const response = await OriginationManagerInstance.initializePayLaterRequest(
             loanTerms,
             account,
@@ -202,7 +202,7 @@ const buyPayLaterNFT = async ({
 
             return payLaterListingUpdatedDetails;
           }
-      } else {
+      } else if(isLenderTheOwnerOfNFTCheck) {
           const TokenInstance = new ethers.Contract(loanTerms.payableCurrency, ERC20.abi, signer);
           const approveRequest = await TokenInstance.approve(DEPLOYED_ADDRESS[parseInt(chainId)].OriginationManager, ins);
           await approveRequest.wait();

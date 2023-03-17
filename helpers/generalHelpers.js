@@ -348,8 +348,9 @@ const isOwnerOfNFTByOwnerAddress = async({
             const ABI = JSON.parse(response.data.result);
 
             const NFTContract = new ethers.Contract(tokenDetails.token_address, ABI, userWallet);   
-            
+
             const currentOwnerAddress = await NFTContract.ownerOf(tokenDetails.token_id);
+            console.log(currentOwnerAddress,ownerAddress, currentOwnerAddress === ownerAddress )
             if(currentOwnerAddress === ownerAddress) {
               return true;
             } else {
