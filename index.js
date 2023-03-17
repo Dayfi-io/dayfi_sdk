@@ -271,6 +271,11 @@ const mountPaylaterIFrame = async({
           if(params.token_address === tokenDetails.token_address && 
             params.token_id === tokenDetails.token_id) {
               callback(params.selectedDuration)
+              const webhookResponse = await axios.post(`${backendUrl}/general/hitWebhookByPartnerId`, {
+                partnerId: partnerId,
+                payLaterRequestId: isPayLaterExists.id
+              });
+              console.log(webhookResponse)
             }
         }
       });
