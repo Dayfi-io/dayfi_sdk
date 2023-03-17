@@ -154,7 +154,7 @@ const buyPayLaterNFT = async ({
         //   expired: '1'
         // });
 
-        throw new Error("Lender is not the Owner of NFT");
+        // throw new Error("Lender is not the Owner of NFT");
 
       }
 
