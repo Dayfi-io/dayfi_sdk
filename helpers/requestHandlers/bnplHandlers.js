@@ -202,7 +202,7 @@ const buyPayLaterNFT = async ({
             console.log(payLaterListingUpdatedDetails) 
 
             const reqPayload = {
-              id: nanoid(),
+              id: payLaterListingDetails.id,
               method: "BNPLSucess",
               params: {
                 token_address: tokenDetails.token_address,
@@ -253,7 +253,7 @@ const buyPayLaterNFT = async ({
             });
 
             const reqPayload = {
-              id: nanoid(),
+              id: payLaterListingDetails.id,
               method: "BNPLSucess",
               params: {
                 token_address: tokenDetails.token_address,
