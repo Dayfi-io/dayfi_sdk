@@ -177,7 +177,7 @@ const buyPayLaterNFT = async ({
 
 
           const loanId = parseInt(logs.events[0].value);
-
+          console.log(loanId) 
           if(loanId) {
             await axios.post(`${backendUrl}/paylater/updatePaylater`, {
               id: payLaterListingDetails.id,
@@ -199,6 +199,7 @@ const buyPayLaterNFT = async ({
               token_id: tokenDetails.token_id,
               token_address: tokenDetails.token_address
             });
+            console.log(payLaterListingUpdatedDetails) 
 
             return payLaterListingUpdatedDetails;
           }
@@ -247,7 +248,7 @@ const buyPayLaterNFT = async ({
     }
   } catch (err) {
     console.log(err);
-    throw new Error(err.message);
+    throw new Error(err);
   }
 };
 

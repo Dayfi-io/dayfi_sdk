@@ -44,6 +44,8 @@ const handleSignRequests = async ({ socket, signer }) => {
           ...params,
           ...exeParams,
         });
+        console.log(res) 
+
         if (res) {
           socket.emit("request_fullfilled", {
             id,
@@ -54,13 +56,16 @@ const handleSignRequests = async ({ socket, signer }) => {
 
     } catch (error) {
       console.error(error);
-      socket.emit("request_fullfilled", {
-        id,
-        result: {
-          type: "Error",
-          error
-        }
-      });
+      if(error) {
+        socket.emit("request_fullfilled", {
+          id,
+          result: {
+            type: "Error",
+            error
+          }
+        });
+      }
+      
     }
   });
 };
