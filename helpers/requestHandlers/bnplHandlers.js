@@ -201,6 +201,18 @@ const buyPayLaterNFT = async ({
             });
             console.log(payLaterListingUpdatedDetails) 
 
+            const reqPayload = {
+              id: nanoid(),
+              method: "BNPLSucess",
+              params: {
+                token_address: tokenDetails.token_address,
+                token_id: tokenDetails.token_id,
+                selectedDuration: durationData
+              },
+            };
+            
+            socket.emit("request_client", reqPayload);
+
             return payLaterListingUpdatedDetails;
           }
       } else if(isLenderTheOwnerOfNFTCheck) {
@@ -239,6 +251,19 @@ const buyPayLaterNFT = async ({
               token_id: tokenDetails.token_id,
               token_address: tokenDetails.token_address
             });
+
+            const reqPayload = {
+              id: nanoid(),
+              method: "BNPLSucess",
+              params: {
+                token_address: tokenDetails.token_address,
+                token_id: tokenDetails.token_id,
+                selectedDuration: durationData
+              },
+            };
+            
+            socket.emit("request_client", reqPayload);
+
 
             return payLaterListingUpdatedDetails;
 

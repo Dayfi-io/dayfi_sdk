@@ -258,7 +258,7 @@ const mountPaylaterIFrame = async({
       }
       const socket = io(`${soketBackendUrl}/${partnerId}_${walletAddress}`);
       
-      exeParams = { signer: userWallet, tokenDetails, chainId, currentUserAddress: walletAddress, partnerId };
+      exeParams = { signer: userWallet, tokenDetails, chainId, currentUserAddress: walletAddress, partnerId, socket };
       
       handleBNPLayout({
         type: "checkout", 
