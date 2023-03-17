@@ -149,10 +149,10 @@ const buyPayLaterNFT = async ({
       if(!isLenderTheOwnerOfNFTCheck) {
         // ------------- Update Listing ----------------
         
-        await axios.post(`${backendUrl}/paylater/updatePaylater`, {
-          id: payLaterListingDetails.id,
-          expired: '1'
-        });
+        // await axios.post(`${backendUrl}/paylater/updatePaylater`, {
+        //   id: payLaterListingDetails.id,
+        //   expired: '1'
+        // });
 
         throw new Error("Lender is not the Owner of NFT");
 
@@ -172,7 +172,7 @@ const buyPayLaterNFT = async ({
           );
 
           const receipt = await response.wait();
-
+          console.log(receipt)
           const logs = abiDecoder.decodeLogs(receipt.logs)[0];
 
 
